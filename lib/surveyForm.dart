@@ -1,11 +1,13 @@
 // import 'dart:convert';
+import 'dart:convert';
 import 'dart:typed_data';
-// import 'dart:ui' as ui;
+import 'dart:ui' as ui;
 
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:jas_survey/addComponent/adminSignatureField.dart';
 import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
 import 'package:jas_survey/listDevicePage/cableListPage.dart';
 import 'package:jas_survey/listDevicePage/switchListPage.dart';
@@ -23,17 +25,14 @@ class _SurveyFormState extends State<SurveyForm> {
   String jenisPerangkat;
 
   DateTime _date = DateTime.now();
-  TimeOfDay _time = TimeOfDay.now();
 
   final formSurvey = GlobalKey<FormState>();
 
-  static ByteData _imgAdmin = ByteData(0);
-  static ByteData _imgClient = ByteData(0);
   static var color = Colors.red;
   static var strokeWidth = 5.0;
 
-  static final _signAdmin = GlobalKey<SignatureState>();
-  static final _signClient = GlobalKey<SignatureState>();
+  String _signAdmin;
+  String _signClient;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +95,11 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Location Cannot be Empty!';
+                              }
+                            },
                             key: Key('keyLocation'),
                             decoration: InputDecoration(
                               labelText: 'Location',
@@ -259,10 +263,23 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: Text('Admin Signature'),
-                          onTap: () {
-                            _adminSignField();
+                          onTap: () async {
+                            final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AdminSginField(),
+                                ));
+                            if (data != null) {
+                              final signAdm =
+                                  base64.encode(data.buffer.asUint8List());
+                              setState(() {
+                                _signAdmin = signAdm;
+                              });
+                            }
+                            // debugPrint(signAdmin);
+                            // _adminSignField();
                           },
-                          trailing: _imgAdmin.buffer.lengthInBytes == 0
+                          trailing: _signAdmin == null
                               ? Icon(
                                   Icons.check_box_outline_blank,
                                   color: Colors.grey,
@@ -294,10 +311,22 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: Text('Client Signature'),
-                          onTap: () {
-                            _clientSignField();
+                          onTap: () async {
+                            final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AdminSginField(),
+                                ));
+                            if (data != null) {
+                              final signAdm =
+                                  base64.encode(data.buffer.asUint8List());
+                              setState(() {
+                                _signAdmin = signAdm;
+                              });
+                            }
+                            // _clientSignField();
                           },
-                          trailing: _imgClient.buffer.lengthInBytes == 0
+                          trailing: _signClient == null
                               ? Icon(
                                   Icons.check_box_outline_blank,
                                   color: Colors.grey,
@@ -319,6 +348,25 @@ class _SurveyFormState extends State<SurveyForm> {
                   Padding(
                     padding: EdgeInsets.only(top: 3.0),
                   ),
+
+                  Container(
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: 15.0, right: 15.0, bottom: 10.0),
+                      child: MaterialButton(
+                        height: 45.0,
+                        color: Theme.of(context).accentColor,
+                        minWidth: double.infinity,
+                        child: Text(
+                          'Sudmit',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white, fontSize: 17.0),
+                        ),
+                        onPressed: () {
+                          if (formSurvey.currentState.validate()) {
+                            debugPrint('Form Submitted');
+                          }
+                        },
+                      ))
                 ],
               ),
             ),
@@ -365,360 +413,182 @@ class _SurveyFormState extends State<SurveyForm> {
     }
   }
 
-  //Widget for add Switch Component
-  Widget switchAddForm() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Switch Add Form'),
-        centerTitle: false,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Form(
-          key: Key('switchForm'),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Vendor / Model',
-                    hintText: 'type the vendor',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'No. Aset / SN',
-                    hintText: 'type the Asset Number',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Amount',
-                    hintText: 'type the Amount',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  child: Text('Add Switch'),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    debugPrint('Switch added!');
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // void _adminSignField() {
+  //   AlertDialog adminSignField = new AlertDialog(
+  //     content: Container(
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: <Widget>[
+  //           AppBar(
+  //             leading: Icon(Icons.edit),
+  //             elevation: 0,
+  //             title: Text('Admin Signature'),
+  //             backgroundColor: Theme.of(context).accentColor,
+  //             centerTitle: false,
+  //           ),
+  //           Padding(padding: EdgeInsets.only(bottom: 3.0)),
+  //           Container(
+  //             width: 350.0,
+  //             height: 300.0,
+  //             child: Signature(
+  //               color: color,
+  //               key: _signAdmin,
+  //               onSign: () {
+  //                 final sign = _signAdmin.currentState;
+  //                 debugPrint('${sign.points.length} points in the signature');
+  //               },
+  //               strokeWidth: strokeWidth,
+  //             ),
+  //             color: Colors.black12,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     actions: <Widget>[
+  //       FlatButton(
+  //         onPressed: () async {
+  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
+  //           final sign = _signAdmin.currentState;
+  //           final image = await sign.getData();
 
-  //Widget for add wireless Component
-  Widget wirelessAddForm() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Wireless Add Form'),
-        centerTitle: false,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Form(
-          key: Key('wirelessForm'),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Vendor / Model',
-                    hintText: 'type the vendor',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'No. Aset / SN',
-                    hintText: 'type the Asset Number',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Amount',
-                    hintText: 'type the Amount',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  child: Text('Add Wireless'),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    debugPrint('Wireless added!');
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //           // convert image into byteData and Base64
+  //           var data = await image.toByteData(format: ui.ImageByteFormat.png);
+  //           final encoded =
+  //               base64.encode(data.buffer.asUint8List()); //encode into base64
 
-  //Widget for add fiber device Component
-  Widget fiberDeviceAddForm() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fiber Device Add Form'),
-        centerTitle: false,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Form(
-          key: Key('fiberDeviceForm'),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Vendor / Model',
-                    hintText: 'type the vendor',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'No. Aset / SN',
-                    hintText: 'type the Asset Number',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Amount',
-                    hintText: 'type the Amount',
-                    isDense: true,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  child: Text('Add Device'),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    debugPrint('Fiber Device added!');
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //           setState(() {
+  //             _imgAdmin = ByteData(1);
+  //           });
+  //           // debugPrint("onPressed " + encoded);
+  //           debugPrint("Admin Signature retrieved!");
 
-  void _adminSignField() {
-    AlertDialog adminSignField = new AlertDialog(
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            AppBar(
-              leading: Icon(Icons.edit),
-              elevation: 0,
-              title: Text('Admin Signature'),
-              backgroundColor: Theme.of(context).accentColor,
-              centerTitle: false,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 3.0)),
-            Container(
-              width: 350.0,
-              height: 300.0,
-              child: Signature(
-                color: color,
-                key: _signAdmin,
-                onSign: () {
-                  final sign = _signAdmin.currentState;
-                  debugPrint('${sign.points.length} points in the signature');
-                },
-                strokeWidth: strokeWidth,
-              ),
-              color: Colors.black12,
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () async {
-            //retrieve image data, do whatever you want with it (send to server, save locally...)
-            final sign = _signAdmin.currentState;
-            final image = await sign.getData();
+  //           Navigator.pop(context);
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Save',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       ),
+  //       FlatButton(
+  //         onPressed: () async {
+  //           final sign = _signAdmin.currentState;
+  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
+  //           setState(() {
+  //             _imgAdmin = ByteData(0);
+  //           });
+  //           debugPrint("Admin Signature removed ");
+  //           sign.clear();
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Clear',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       ),
+  //       FlatButton(
+  //         onPressed: () {
+  //           Navigator.pop(context);
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Cancel',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  //   showDialog(context: context, child: adminSignField);
+  // }
 
-            //convert image into byteData and Base64
-            // var data = await image.toByteData(
-            //     format: ui.ImageByteFormat.png);
-            // final encoded = base64.encode(data.buffer
-            //     .asUint8List()); //encode into base64
+  // void _clientSignField() {
+  //   AlertDialog clientSignField = new AlertDialog(
+  //     content: Container(
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: <Widget>[
+  //           AppBar(
+  //             leading: Icon(Icons.edit),
+  //             elevation: 0,
+  //             title: Text('Client Signature'),
+  //             backgroundColor: Theme.of(context).accentColor,
+  //             centerTitle: false,
+  //           ),
+  //           Padding(padding: EdgeInsets.only(bottom: 3.0)),
+  //           Container(
+  //             width: 350,
+  //             height: 300.0,
+  //             child: Signature(
+  //               color: color,
+  //               key: _signClient,
+  //               onSign: () {
+  //                 final sign = _signClient.currentState;
+  //                 debugPrint('${sign.points.length} points in the signature');
+  //               },
+  //               strokeWidth: strokeWidth,
+  //             ),
+  //             color: Colors.black12,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     actions: <Widget>[
+  //       FlatButton(
+  //         onPressed: () async {
+  //           final sign = _signClient.currentState;
+  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
+  //           final image = await sign.getData();
 
-            setState(() {
-              _imgAdmin = ByteData(1);
-            });
-            // debugPrint("onPressed " + encoded);
-            debugPrint("Admin Signature retrieved!");
+  //           //convert image into byteData and Base64
+  //           // var data = await image.toByteData(
+  //           //     format: ui.ImageByteFormat.png);
+  //           // final encoded = base64.encode(data.buffer
+  //           //     .asUint8List()); //encode into base64
 
-            Navigator.pop(context);
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Save',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        FlatButton(
-          onPressed: () async {
-            final sign = _signAdmin.currentState;
-            //retrieve image data, do whatever you want with it (send to server, save locally...)
-            setState(() {
-              _imgAdmin = ByteData(0);
-            });
-            debugPrint("Admin Signature removed ");
-            sign.clear();
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Clear',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        FlatButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: Colors.white),
-          ),
-        )
-      ],
-    );
-    showDialog(context: context, child: adminSignField);
-  }
+  //           setState(() {
+  //             _imgClient = ByteData(1);
+  //           });
+  //           // debugPrint("onPressed " + encoded);
+  //           debugPrint("Client Signature retrieved!");
 
-  void _clientSignField() {
-    AlertDialog clientSignField = new AlertDialog(
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            AppBar(
-              leading: Icon(Icons.edit),
-              elevation: 0,
-              title: Text('Client Signature'),
-              backgroundColor: Theme.of(context).accentColor,
-              centerTitle: false,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 3.0)),
-            Container(
-              width: 350,
-              height: 300.0,
-              child: Signature(
-                color: color,
-                key: _signClient,
-                onSign: () {
-                  final sign = _signClient.currentState;
-                  debugPrint('${sign.points.length} points in the signature');
-                },
-                strokeWidth: strokeWidth,
-              ),
-              color: Colors.black12,
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () async {
-            final sign = _signClient.currentState;
-            //retrieve image data, do whatever you want with it (send to server, save locally...)
-            final image = await sign.getData();
-
-            //convert image into byteData and Base64
-            // var data = await image.toByteData(
-            //     format: ui.ImageByteFormat.png);
-            // final encoded = base64.encode(data.buffer
-            //     .asUint8List()); //encode into base64
-
-            setState(() {
-              _imgClient = ByteData(1);
-            });
-            // debugPrint("onPressed " + encoded);
-            debugPrint("Client Signature retrieved!");
-
-            Navigator.pop(context);
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Save',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        FlatButton(
-          onPressed: () async {
-            final sign = _signClient.currentState;
-            //retrieve image data, do whatever you want with it (send to server, save locally...)
-            setState(() {
-              _imgClient = ByteData(0);
-            });
-            debugPrint("Client Signature removed ");
-            sign.clear();
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Clear',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        FlatButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          color: Theme.of(context).accentColor,
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: Colors.white),
-          ),
-        )
-      ],
-    );
-    showDialog(context: context, child: clientSignField);
-  }
+  //           Navigator.pop(context);
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Save',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       ),
+  //       FlatButton(
+  //         onPressed: () async {
+  //           final sign = _signClient.currentState;
+  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
+  //           setState(() {
+  //             _imgClient = ByteData(0);
+  //           });
+  //           debugPrint("Client Signature removed ");
+  //           sign.clear();
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Clear',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       ),
+  //       FlatButton(
+  //         onPressed: () {
+  //           Navigator.pop(context);
+  //         },
+  //         color: Theme.of(context).accentColor,
+  //         child: Text(
+  //           'Cancel',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  //   showDialog(context: context, child: clientSignField);
+  // }
 
   // _addComponentSheet() {
   //   showModalBottomSheet(

@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=C:\Users\REN\flutter"
-export "FLUTTER_APPLICATION_PATH=D:\AllProjects\Flutter\jas_survey"
+export "FLUTTER_APPLICATION_PATH=D:\Projects\Flutter\JAS_FormSurvey_Flutter"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build\ios"
