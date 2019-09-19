@@ -318,10 +318,10 @@ class _SurveyFormState extends State<SurveyForm> {
                                   builder: (context) => AdminSginField(),
                                 ));
                             if (data != null) {
-                              final signAdm =
+                              final signClient =
                                   base64.encode(data.buffer.asUint8List());
                               setState(() {
-                                _signAdmin = signAdm;
+                                _signClient = signClient;
                               });
                             }
                             // _clientSignField();
