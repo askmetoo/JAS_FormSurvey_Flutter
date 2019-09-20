@@ -5,12 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
 import 'dart:ui';
 
-class AdminSginField extends StatefulWidget {
+class AdminSignField extends StatefulWidget {
+  final Function setSign, getSign;
+  AdminSignField({@required this.setSign, @required this.getSign});
+
   @override
-  _AdminSginFieldState createState() => _AdminSginFieldState();
+  _AdminSignFieldState createState() => _AdminSignFieldState();
 }
 
-class _AdminSginFieldState extends State<AdminSginField> {
+class _AdminSignFieldState extends State<AdminSignField> {
   ByteData _imgAdmin = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
@@ -19,6 +22,8 @@ class _AdminSginFieldState extends State<AdminSginField> {
 
   @override
   Widget build(BuildContext context) {
+    print("sign Admin");
+    print(widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Signature'),
@@ -45,36 +50,34 @@ class _AdminSginFieldState extends State<AdminSginField> {
             Padding(
               padding: EdgeInsets.all(8.0),
             ),
-            _imgAdmin.buffer.lengthInBytes == 0 ?
-            Container()
-            :
-            Center(
-              child: LimitedBox(
-                maxHeight: 200.0,
-                child: Image.memory(_imgAdmin.buffer.asUint8List()),
-              )
-            ),
+            _imgAdmin.buffer.lengthInBytes == 0
+                ? Container()
+                : Center(
+                    child: LimitedBox(
+                    maxHeight: 200.0,
+                    child: Image.memory(base64.decode(widget.getSign())),
+                  )),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Save'),
-                  onPressed: () async{
+                  onPressed: () async {
                     final sign = _signAdmin.currentState;
                     final image = await sign.getData();
-                    var data = await image.toByteData(format: ImageByteFormat.png);
+                    var data =
+                        await image.toByteData(format: ImageByteFormat.png);
                     final encoded = base64.encode(data.buffer.asUint8List());
-                    setState(() {
-                      _imgAdmin = data;
-                    });
+                    widget.setSign(encoded);
                     debugPrint("Admin Signature Retrieved !");
+                    // Navigator.pop(context, data);
                   },
                 ),
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Clear'),
-                  onPressed: () async{
+                  onPressed: () async {
                     final sign = _signAdmin.currentState;
                     sign.clear();
                     setState(() {

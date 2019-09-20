@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
 import 'dart:ui';
 
-class AdminSginField extends StatefulWidget {
+class ClientSginField extends StatefulWidget {
+  final Function setSign, getSign;
+  ClientSginField({@required this.setSign, @required this.getSign});
   @override
-  _AdminSginFieldState createState() => _AdminSginFieldState();
+  _ClientSginFieldState createState() => _ClientSginFieldState();
 }
 
-class _AdminSginFieldState extends State<AdminSginField> {
+class _ClientSginFieldState extends State<ClientSginField> {
   ByteData _imgClient = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
@@ -19,6 +21,8 @@ class _AdminSginFieldState extends State<AdminSginField> {
 
   @override
   Widget build(BuildContext context) {
+    print("sign Client");
+    print(widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Client Signature'),
@@ -51,7 +55,7 @@ class _AdminSginFieldState extends State<AdminSginField> {
             Center(
               child: LimitedBox(
                 maxHeight: 200.0,
-                child: Image.memory(_imgClient.buffer.asUint8List()),
+                child: Image.memory(base64.decode(widget.getSign())),
               )
             ),
             Row(
@@ -65,9 +69,10 @@ class _AdminSginFieldState extends State<AdminSginField> {
                     final image = await sign.getData();
                     var data = await image.toByteData(format: ImageByteFormat.png);
                     final encoded = base64.encode(data.buffer.asUint8List());
-                    setState(() {
-                      _imgClient = data;
-                    });
+                    widget.setSign(encoded);
+                    // setState(() {
+                    //   _imgClient = data;
+                    // });
                     debugPrint("Client Signature Retrieved !");
                   },
                 ),

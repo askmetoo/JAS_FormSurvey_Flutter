@@ -1,13 +1,14 @@
 // import 'dart:convert';
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter_signature_pad/flutter_signature_pad.dart';
+// import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
+import 'package:jas_survey/addComponent/clientSignatureField.dart';
 import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
 import 'package:jas_survey/listDevicePage/cableListPage.dart';
 import 'package:jas_survey/listDevicePage/switchListPage.dart';
@@ -31,9 +32,31 @@ class _SurveyFormState extends State<SurveyForm> {
   static var color = Colors.red;
   static var strokeWidth = 5.0;
 
-  String _signAdmin;
-  String _signClient;
+  ByteData _imgAdminByte = new ByteData(0);
 
+  String signAdmin;
+  String signClient;
+
+  setSignAdmin(String sign) {
+    setState(() {
+     signAdmin = sign;
+    });
+  }
+
+  String getAdminSign() {
+    return signAdmin;
+  }
+
+  setSignClient(String sign) {
+    setState(() {
+     signClient = sign;
+    });
+  }
+
+  String getClientSign() {
+    return signClient;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +151,7 @@ class _SurveyFormState extends State<SurveyForm> {
                         AppBar(
                           leading: Icon(Icons.library_books),
                           elevation: 0,
-                          title: Text("List of Devices"),
+                          title: Text("Devices and Components"),
                           backgroundColor: Theme.of(context).accentColor,
                           centerTitle: false,
                         ),
@@ -267,19 +290,19 @@ class _SurveyFormState extends State<SurveyForm> {
                             final data = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AdminSginField(),
+                                  builder: (context) => AdminSignField(setSign: setSignAdmin, getSign: getAdminSign),
                                 ));
-                            if (data != null) {
-                              final signAdm =
-                                  base64.encode(data.buffer.asUint8List());
-                              setState(() {
-                                _signAdmin = signAdm;
-                              });
-                            }
-                            // debugPrint(signAdmin);
+                            // if (data != null) {
+                            //   final signAdm =
+                            //       base64.encode(data.buffer.asUint8List());
+                            //   setState(() {
+                            //     _signAdmin = signAdm;
+                            //   });
+                            // }
+                            // debugPrint(_signAdmin);
                             // _adminSignField();
                           },
-                          trailing: _signAdmin == null
+                          trailing: signAdmin == null
                               ? Icon(
                                   Icons.check_box_outline_blank,
                                   color: Colors.grey,
@@ -315,18 +338,24 @@ class _SurveyFormState extends State<SurveyForm> {
                             final data = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AdminSginField(),
+                                  builder: (context) => ClientSginField(getSign: getClientSign, setSign: setSignClient,),
                                 ));
-                            if (data != null) {
-                              final signClient =
-                                  base64.encode(data.buffer.asUint8List());
-                              setState(() {
-                                _signClient = signClient;
-                              });
-                            }
+                            // final data = await Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => AdminSginField(),
+                            //     ));
+                            // if (data != null) {
+                            //   final signClient =
+                            //       base64.encode(data.buffer.asUint8List());
+                            //   setState(() {
+                            //     _signClient = signClient;
+                            //   }
+                            //   );
+                            // }
                             // _clientSignField();
                           },
-                          trailing: _signClient == null
+                          trailing: signClient == null
                               ? Icon(
                                   Icons.check_box_outline_blank,
                                   color: Colors.grey,
