@@ -21,8 +21,9 @@ class _ClientSginFieldState extends State<ClientSginField> {
 
   @override
   Widget build(BuildContext context) {
-    print("sign Client");
-    print(widget.getSign());
+    widget.getSign() == null ?
+    print("sign Client was NULL"):
+    print("sign Client : " + widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Client Signature'),
@@ -76,15 +77,16 @@ class _ClientSginFieldState extends State<ClientSginField> {
                     debugPrint("Client Signature Retrieved !");
                   },
                 ),
+                 Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                ),
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Clear'),
                   onPressed: () async{
                     final sign = _signClient.currentState;
                     sign.clear();
-                    setState(() {
-                      _imgClient = ByteData(0);
-                    });
+                    widget.setSign(null);
                     debugPrint("Client Signature Removed !");
                   },
                 ),
@@ -96,3 +98,23 @@ class _ClientSginFieldState extends State<ClientSginField> {
     );
   }
 }
+//Show Signature Result
+            // Card(
+            //   elevation: 1.0,
+            //   child: Column(
+            //     children: <Widget>[
+            //       _imgAdmin.buffer.lengthInBytes == 0
+            //           ? Container()
+            //           : LimitedBox(
+            //               maxHeight: 200.0,
+            //               child: Image.memory(_imgAdmin.buffer
+            //                   .asUint8List())), //to show image after click save button
+            //       _imgClient.buffer.lengthInBytes == 0
+            //           ? Container()
+            //           : LimitedBox(
+            //               maxHeight: 200.0,
+            //               child: Image.memory(_imgClient.buffer
+            //                   .asUint8List())), //to show image after click save button
+            //     ],
+            //   ),
+            // ),

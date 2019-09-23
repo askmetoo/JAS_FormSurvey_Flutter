@@ -1,9 +1,7 @@
-// import 'dart:convert';
-// import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-// import 'package:flutter_signature_pad/flutter_signature_pad.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
@@ -13,7 +11,6 @@ import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
 import 'package:jas_survey/listDevicePage/cableListPage.dart';
 import 'package:jas_survey/listDevicePage/switchListPage.dart';
 import 'package:jas_survey/listDevicePage/wirelessListPage.dart';
-// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class SurveyForm extends StatefulWidget {
   SurveyForm({Key key}) : super(key: key);
@@ -32,14 +29,12 @@ class _SurveyFormState extends State<SurveyForm> {
   static var color = Colors.red;
   static var strokeWidth = 5.0;
 
-  ByteData _imgAdminByte = new ByteData(0);
-
   String signAdmin;
   String signClient;
 
   setSignAdmin(String sign) {
     setState(() {
-     signAdmin = sign;
+      signAdmin = sign;
     });
   }
 
@@ -49,14 +44,14 @@ class _SurveyFormState extends State<SurveyForm> {
 
   setSignClient(String sign) {
     setState(() {
-     signClient = sign;
+      signClient = sign;
     });
   }
 
   String getClientSign() {
     return signClient;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,6 +273,11 @@ class _SurveyFormState extends State<SurveyForm> {
                               hintText: 'type admin name',
                               isDense: true,
                             ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Admin Name Cannot be Empty!';
+                              }
+                            },
                           ),
                         ),
                         ListTile(
@@ -287,20 +287,13 @@ class _SurveyFormState extends State<SurveyForm> {
                           ),
                           title: Text('Admin Signature'),
                           onTap: () async {
-                            final data = await Navigator.push(
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AdminSignField(setSign: setSignAdmin, getSign: getAdminSign),
+                                  builder: (context) => AdminSignField(
+                                      setSign: setSignAdmin,
+                                      getSign: getAdminSign),
                                 ));
-                            // if (data != null) {
-                            //   final signAdm =
-                            //       base64.encode(data.buffer.asUint8List());
-                            //   setState(() {
-                            //     _signAdmin = signAdm;
-                            //   });
-                            // }
-                            // debugPrint(_signAdmin);
-                            // _adminSignField();
                           },
                           trailing: signAdmin == null
                               ? Icon(
@@ -326,6 +319,11 @@ class _SurveyFormState extends State<SurveyForm> {
                               hintText: 'type client name',
                               isDense: true,
                             ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Client Name Cannot be Empty!';
+                              }
+                            },
                           ),
                         ),
                         ListTile(
@@ -335,25 +333,14 @@ class _SurveyFormState extends State<SurveyForm> {
                           ),
                           title: Text('Client Signature'),
                           onTap: () async {
-                            final data = await Navigator.push(
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ClientSginField(getSign: getClientSign, setSign: setSignClient,),
+                                  builder: (context) => ClientSginField(
+                                    getSign: getClientSign,
+                                    setSign: setSignClient,
+                                  ),
                                 ));
-                            // final data = await Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => AdminSginField(),
-                            //     ));
-                            // if (data != null) {
-                            //   final signClient =
-                            //       base64.encode(data.buffer.asUint8List());
-                            //   setState(() {
-                            //     _signClient = signClient;
-                            //   }
-                            //   );
-                            // }
-                            // _clientSignField();
                           },
                           trailing: signClient == null
                               ? Icon(
@@ -399,26 +386,6 @@ class _SurveyFormState extends State<SurveyForm> {
                 ],
               ),
             ),
-            //Show Signature Result
-            // Card(
-            //   elevation: 1.0,
-            //   child: Column(
-            //     children: <Widget>[
-            //       _imgAdmin.buffer.lengthInBytes == 0
-            //           ? Container()
-            //           : LimitedBox(
-            //               maxHeight: 200.0,
-            //               child: Image.memory(_imgAdmin.buffer
-            //                   .asUint8List())), //to show image after click save button
-            //       _imgClient.buffer.lengthInBytes == 0
-            //           ? Container()
-            //           : LimitedBox(
-            //               maxHeight: 200.0,
-            //               child: Image.memory(_imgClient.buffer
-            //                   .asUint8List())), //to show image after click save button
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

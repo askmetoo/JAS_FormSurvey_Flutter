@@ -22,8 +22,9 @@ class _AdminSignFieldState extends State<AdminSignField> {
 
   @override
   Widget build(BuildContext context) {
-    print("sign Admin");
-    print(widget.getSign());
+    widget.getSign() == null
+        ? print("sign Admin was NULL")
+        : print("sign Admin : " + widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Signature'),
@@ -74,15 +75,16 @@ class _AdminSignFieldState extends State<AdminSignField> {
                     // Navigator.pop(context, data);
                   },
                 ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                ),
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Clear'),
                   onPressed: () async {
                     final sign = _signAdmin.currentState;
                     sign.clear();
-                    setState(() {
-                      _imgAdmin = ByteData(0);
-                    });
+                    widget.setSign(null);
                     debugPrint("Admin Signature Removed !");
                   },
                 ),
@@ -94,3 +96,24 @@ class _AdminSignFieldState extends State<AdminSignField> {
     );
   }
 }
+
+//Show Signature Result
+// Card(
+//   elevation: 1.0,
+//   child: Column(
+//     children: <Widget>[
+//       _imgAdmin.buffer.lengthInBytes == 0
+//           ? Container()
+//           : LimitedBox(
+//               maxHeight: 200.0,
+//               child: Image.memory(_imgAdmin.buffer
+//                   .asUint8List())), //to show image after click save button
+//       _imgClient.buffer.lengthInBytes == 0
+//           ? Container()
+//           : LimitedBox(
+//               maxHeight: 200.0,
+//               child: Image.memory(_imgClient.buffer
+//                   .asUint8List())), //to show image after click save button
+//     ],
+//   ),
+// ),
