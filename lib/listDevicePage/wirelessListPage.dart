@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jas_survey/addComponent/wirelessAddForm.dart';
 import 'package:jas_survey/emptyState.dart';
+import 'package:jas_survey/models/wireless.dart';
 
 class WirelessListPage extends StatefulWidget {
   @override

@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
-
-class SwitchData {
-  String vendorSwitch = "";
-  String noAsetSwitch = "";
-  String jumlahSwitch = "";
-
-  SwitchData(
-      {this.vendorSwitch = '', this.noAsetSwitch = '', this.jumlahSwitch = ''});
-}
+import 'package:jas_survey/models/switch.dart';
 
 class SwitchAddForm extends StatefulWidget {
   @override

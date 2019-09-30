@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
-import 'package:jas_survey/addComponent/cableAddForm.dart';
+import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
 import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
 import 'package:jas_survey/listDevicePage/cableListPage.dart';

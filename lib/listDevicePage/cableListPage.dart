@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jas_survey/addComponent/cableAddForm.dart';
+import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/emptyState.dart';
 
 class CableListPage extends StatefulWidget {

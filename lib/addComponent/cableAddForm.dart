@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-
-class Cable {
-  String panjang;
-  String jenisKabel;
-
-  Cable({this.panjang, this.jenisKabel});
-}
+import 'package:jas_survey/models/cable.dart';
 
 class CableAddForm extends StatefulWidget {
   final List<Cable> cables;

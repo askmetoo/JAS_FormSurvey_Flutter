@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
-
-class WirelessDevice {
-  String vendorWD = "";
-  String noAsetWD = "";
-  String jumlahWD = "";
-
-  WirelessDevice(
-      {this.vendorWD = '', this.noAsetWD = '', this.jumlahWD = ''});
-}
+import 'package:jas_survey/models/wireless.dart';
 
 class WirelessAddForm extends StatefulWidget {
   @override

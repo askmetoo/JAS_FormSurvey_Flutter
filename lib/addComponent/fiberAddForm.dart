@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jas_survey/models/fiberDevice.dart';
 
-class FiberDevice {
-  String vendorFD = "";
-  String noAsetFD = "";
-  String jumlahFD = "";
-
-  FiberDevice({
-    this.vendorFD = '', this.noAsetFD = '', this.jumlahFD = ''
-  });
-}
 
 class FiberDeviceAddForm extends StatefulWidget {
   @override
