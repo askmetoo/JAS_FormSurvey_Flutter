@@ -49,23 +49,35 @@ class _SurveyFormState extends State<SurveyForm> {
     return signClient;
   }
 
-  //for cable add process
+  //FOR CABLE PROCESS
   List<Cable> getCables() {
     return cables;
   }
 
   List<Cable> cables = [];
 
-  addCable(Cable cable) {
+  addCable(Cable newcable) {
     setState(() {
-      cables.add(cable);
+      cables.add(newcable);
       Navigator.pop(context);
     });
   }
 
+  removeCable(index) {
+    print(index);
+    setState(() {
+      cables.removeAt(index);
+    });
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => CableListPage(
+            addCable: addCable,
+            setCable: getCables,
+            dataCable: cables,
+            removeCable: removeCable))); 
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(cables.length.toString());
     return Scaffold(
       key: Key('FormKey'),
       appBar: AppBar(
@@ -227,7 +239,9 @@ class _SurveyFormState extends State<SurveyForm> {
                                                   CableListPage(
                                                       addCable: addCable,
                                                       setCable: getCables,
-                                                      dataCable: cables)));
+                                                      dataCable: cables,
+                                                      removeCable:
+                                                          removeCable)));
                                     },
                                   ),
                                   enabled: false,

@@ -5,9 +5,10 @@ import 'package:jas_survey/emptyState.dart';
 class CableListPage extends StatefulWidget {
   final Function addCable;
   final Function setCable;
+  final Function removeCable;
   final List<Cable> dataCable;
 
-  CableListPage({this.addCable, this.setCable, this.dataCable});
+  CableListPage({this.addCable, this.setCable, this.dataCable, this.removeCable});
 
   @override
   _CableListPageState createState() => _CableListPageState();
@@ -39,7 +40,7 @@ class _CableListPageState extends State<CableListPage> {
             //FOR DISPLAY CABLE LIST
             Container(
                 height: MediaQuery.of(context).size.height * 0.80,
-                child: widget.dataCable == null
+                child: widget.dataCable.length == 0
                     ? Center(
                         child: EmptyState(
                           title: "Oops..!!",
@@ -63,7 +64,9 @@ class _CableListPageState extends State<CableListPage> {
                                           " meter"),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      widget.removeCable(index);
+                                    },
                                   ),
                                 )),
                       )),
