@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
+import 'package:jas_survey/addComponent/cableAddForm.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
 import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
 import 'package:jas_survey/listDevicePage/cableListPage.dart';
@@ -21,17 +21,14 @@ class SurveyForm extends StatefulWidget {
 
 class _SurveyFormState extends State<SurveyForm> {
   String jenisPerangkat;
-
   DateTime _date = DateTime.now();
-
   final formSurvey = GlobalKey<FormState>();
-
   static var color = Colors.red;
   static var strokeWidth = 5.0;
-
   String signAdmin;
   String signClient;
 
+  //for signature
   setSignAdmin(String sign) {
     setState(() {
       signAdmin = sign;
@@ -52,8 +49,23 @@ class _SurveyFormState extends State<SurveyForm> {
     return signClient;
   }
 
+  //for cable add process
+  List<Cable> getCables() {
+    return cables;
+  }
+
+  List<Cable> cables = [];
+
+  addCable(Cable cable) {
+    setState(() {
+      cables.add(cable);
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(cables.length.toString());
     return Scaffold(
       key: Key('FormKey'),
       appBar: AppBar(
@@ -212,7 +224,10 @@ class _SurveyFormState extends State<SurveyForm> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CableListPage()));
+                                                  CableListPage(
+                                                      addCable: addCable,
+                                                      setCable: getCables,
+                                                      dataCable: cables)));
                                     },
                                   ),
                                   enabled: false,
@@ -392,7 +407,7 @@ class _SurveyFormState extends State<SurveyForm> {
     );
   }
 
-  //FUNCTION AND WIDGET ARE HERE
+  //WIDGET ARE HERE
 
   //Calender Dialog
   Future<Null> _selectDate(BuildContext context) async {
@@ -408,233 +423,4 @@ class _SurveyFormState extends State<SurveyForm> {
       });
     }
   }
-
-  // void _adminSignField() {
-  //   AlertDialog adminSignField = new AlertDialog(
-  //     content: Container(
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: <Widget>[
-  //           AppBar(
-  //             leading: Icon(Icons.edit),
-  //             elevation: 0,
-  //             title: Text('Admin Signature'),
-  //             backgroundColor: Theme.of(context).accentColor,
-  //             centerTitle: false,
-  //           ),
-  //           Padding(padding: EdgeInsets.only(bottom: 3.0)),
-  //           Container(
-  //             width: 350.0,
-  //             height: 300.0,
-  //             child: Signature(
-  //               color: color,
-  //               key: _signAdmin,
-  //               onSign: () {
-  //                 final sign = _signAdmin.currentState;
-  //                 debugPrint('${sign.points.length} points in the signature');
-  //               },
-  //               strokeWidth: strokeWidth,
-  //             ),
-  //             color: Colors.black12,
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //     actions: <Widget>[
-  //       FlatButton(
-  //         onPressed: () async {
-  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
-  //           final sign = _signAdmin.currentState;
-  //           final image = await sign.getData();
-
-  //           // convert image into byteData and Base64
-  //           var data = await image.toByteData(format: ui.ImageByteFormat.png);
-  //           final encoded =
-  //               base64.encode(data.buffer.asUint8List()); //encode into base64
-
-  //           setState(() {
-  //             _imgAdmin = ByteData(1);
-  //           });
-  //           // debugPrint("onPressed " + encoded);
-  //           debugPrint("Admin Signature retrieved!");
-
-  //           Navigator.pop(context);
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Save',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       ),
-  //       FlatButton(
-  //         onPressed: () async {
-  //           final sign = _signAdmin.currentState;
-  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
-  //           setState(() {
-  //             _imgAdmin = ByteData(0);
-  //           });
-  //           debugPrint("Admin Signature removed ");
-  //           sign.clear();
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Clear',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       ),
-  //       FlatButton(
-  //         onPressed: () {
-  //           Navigator.pop(context);
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Cancel',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       )
-  //     ],
-  //   );
-  //   showDialog(context: context, child: adminSignField);
-  // }
-
-  // void _clientSignField() {
-  //   AlertDialog clientSignField = new AlertDialog(
-  //     content: Container(
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: <Widget>[
-  //           AppBar(
-  //             leading: Icon(Icons.edit),
-  //             elevation: 0,
-  //             title: Text('Client Signature'),
-  //             backgroundColor: Theme.of(context).accentColor,
-  //             centerTitle: false,
-  //           ),
-  //           Padding(padding: EdgeInsets.only(bottom: 3.0)),
-  //           Container(
-  //             width: 350,
-  //             height: 300.0,
-  //             child: Signature(
-  //               color: color,
-  //               key: _signClient,
-  //               onSign: () {
-  //                 final sign = _signClient.currentState;
-  //                 debugPrint('${sign.points.length} points in the signature');
-  //               },
-  //               strokeWidth: strokeWidth,
-  //             ),
-  //             color: Colors.black12,
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //     actions: <Widget>[
-  //       FlatButton(
-  //         onPressed: () async {
-  //           final sign = _signClient.currentState;
-  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
-  //           final image = await sign.getData();
-
-  //           //convert image into byteData and Base64
-  //           // var data = await image.toByteData(
-  //           //     format: ui.ImageByteFormat.png);
-  //           // final encoded = base64.encode(data.buffer
-  //           //     .asUint8List()); //encode into base64
-
-  //           setState(() {
-  //             _imgClient = ByteData(1);
-  //           });
-  //           // debugPrint("onPressed " + encoded);
-  //           debugPrint("Client Signature retrieved!");
-
-  //           Navigator.pop(context);
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Save',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       ),
-  //       FlatButton(
-  //         onPressed: () async {
-  //           final sign = _signClient.currentState;
-  //           //retrieve image data, do whatever you want with it (send to server, save locally...)
-  //           setState(() {
-  //             _imgClient = ByteData(0);
-  //           });
-  //           debugPrint("Client Signature removed ");
-  //           sign.clear();
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Clear',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       ),
-  //       FlatButton(
-  //         onPressed: () {
-  //           Navigator.pop(context);
-  //         },
-  //         color: Theme.of(context).accentColor,
-  //         child: Text(
-  //           'Cancel',
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       )
-  //     ],
-  //   );
-  //   showDialog(context: context, child: clientSignField);
-  // }
-
-  // _addComponentSheet() {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Container(
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             mainAxisAlignment: MainAxisAlignment.start,
-  //             children: <Widget>[
-  //               Icon(Icons.maximize),
-  //               Text(
-  //                 'Add Device Component',
-  //                 style: TextStyle(fontWeight: FontWeight.bold),
-  //               ),
-  //               DropdownButton<String>(
-  //                 // hint: Text('Choose Component Type!'),
-  //                 value: jenisPerangkat,
-  //                 onChanged: (String newvalue) {
-  //                   setState(() {
-  //                     jenisPerangkat = newvalue;
-  //                   });
-  //                 },
-  //                 items: <String>[
-  //                   'switch',
-  //                   'wireless',
-  //                   'kabel',
-  //                   'rj45',
-  //                   'fiber device',
-  //                   ''
-  //                 ].map<DropdownMenuItem<String>>((String value) {
-  //                   return DropdownMenuItem<String>(
-  //                     value: value,
-  //                     child: Text(value.toUpperCase()),
-  //                   );
-  //                 }).toList(),
-  //               ),
-  //               ListTile(
-  //                 leading: Icon(Icons.music_note),
-  //                 title: Text('Music'),
-  //                 onTap: () {},
-  //               ),
-  //               ListTile(
-  //                 leading: Icon(Icons.music_note),
-  //                 title: Text('Music'),
-  //                 onTap: () {},
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
 }

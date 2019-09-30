@@ -1,59 +1,37 @@
 import 'package:flutter/material.dart';
 
 class Cable {
-  String panjang = "";
+  String panjang;
   String jenisKabel;
 
-  Cable({this.panjang = '', this.jenisKabel});
+  Cable({this.panjang, this.jenisKabel});
 }
 
 class CableAddForm extends StatefulWidget {
+  final List<Cable> cables;
+  final Function onAddCable;
+  CableAddForm({this.cables, this.onAddCable});
+
   @override
   _CableAddFormState createState() => _CableAddFormState();
 }
 
 class _CableAddFormState extends State<CableAddForm> {
   final GlobalKey<FormState> _cableForm = GlobalKey<FormState>();
-  List<Cable> kabels = [];
-  Cable dataKabel = new Cable();
-
-  // List<Widget> listCabel() {
-  //   List<Widget> result = [];
-  //   Widget temp = Text('aa');
-  //   result.add(temp);
-  //   return result;
-  // }
-
-  void addKabel() {
-    var cableValid = _cableForm.currentState;
-    cableValid.save();
-    setState(() {
-      var cabel =
-          Cable(panjang: dataKabel.panjang, jenisKabel: dataKabel.jenisKabel);
-      kabels.add(cabel);
-    });
-
-    print(kabels.length);
-    kabels.forEach((kabel) {
-      print(kabel.panjang);
-      print('Cabel added!');
-    });
-  }
+  Cable dataCable = new Cable();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         title: Text('Cable Add Form'),
         centerTitle: false,
       ),
       body: ListView(
-        
         children: <Widget>[
           Form(
             key: _cableForm,
-            child: Container(        
+            child: Container(
               padding: EdgeInsets.all(10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -64,10 +42,10 @@ class _CableAddFormState extends State<CableAddForm> {
                         return DropdownButton<String>(
                           isExpanded: true,
                           hint: Text('Choose Cable Type!'),
-                          value: dataKabel.jenisKabel,
+                          value: dataCable.jenisKabel,
                           onChanged: (String newvalue) {
                             setState(() {
-                              dataKabel.jenisKabel = newvalue;
+                              dataCable.jenisKabel = newvalue;
                             });
                           },
                           items: <String>[
@@ -86,15 +64,15 @@ class _CableAddFormState extends State<CableAddForm> {
                   ),
                   ListTile(
                     title: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Cable Length',
-                        hintText: 'Type the Length (M)',
-                        isDense: true,
-                      ),
-                      onSaved: (String val) =>
-                          setState(() => dataKabel.panjang = val),
-                    ),
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Cable Length',
+                          hintText: 'Type the Length (M)',
+                          isDense: true,
+                        ),
+                        onChanged: (String val) {
+                          setState(() => dataCable.panjang = val);
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(10.0),
@@ -103,7 +81,8 @@ class _CableAddFormState extends State<CableAddForm> {
                       child: Text('Add Cable'),
                       color: Theme.of(context).accentColor,
                       onPressed: () {
-                        addKabel();
+                        widget.onAddCable(dataCable);
+                        _cableForm.currentState.reset();
                       },
                     ),
                   )

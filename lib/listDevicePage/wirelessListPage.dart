@@ -14,6 +14,7 @@ class _WirelessListPageState extends State<WirelessListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('List of Wireless Component'),
         centerTitle: false,

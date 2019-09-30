@@ -14,6 +14,7 @@ class _SwitchListPageState extends State<SwitchListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('List of Switches Component'),
         centerTitle: false,

@@ -3,20 +3,35 @@ import 'package:jas_survey/addComponent/cableAddForm.dart';
 import 'package:jas_survey/emptyState.dart';
 
 class CableListPage extends StatefulWidget {
+  final Function addCable;
+  final Function setCable;
+  final List<Cable> dataCable;
+
+  CableListPage({this.addCable, this.setCable, this.dataCable});
+
   @override
   _CableListPageState createState() => _CableListPageState();
 }
 
 class _CableListPageState extends State<CableListPage> {
-  List<Cable> kabels = [];
-  Cable dataKabel = new Cable();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('List of Cables'),
         centerTitle: false,
+        actions: <Widget>[
+          MaterialButton(
+            child: Text(
+              "SAVE",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
       ),
       body: Container(
         child: Column(
@@ -24,14 +39,34 @@ class _CableListPageState extends State<CableListPage> {
             //FOR DISPLAY CABLE LIST
             Container(
                 height: MediaQuery.of(context).size.height * 0.80,
-                child: kabels.length == 0
+                child: widget.dataCable == null
                     ? Center(
                         child: EmptyState(
                           title: "Oops..!!",
                           message: "Belum ada kabel yang diinput",
                         ),
                       )
-                    : Container()),
+                    : Container(
+                        child: ListView.builder(
+                            itemCount: widget.dataCable.length,
+                            itemBuilder: (BuildContext context, int index) =>
+                                ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(widget
+                                        .dataCable[index].jenisKabel
+                                        .substring(0, 1)),
+                                  ),
+                                  title:
+                                      Text(widget.dataCable[index].jenisKabel),
+                                  subtitle: Text(
+                                      widget.dataCable[index].panjang +
+                                          " meter"),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {},
+                                  ),
+                                )),
+                      )),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
                 padding: EdgeInsets.only(
@@ -49,7 +84,9 @@ class _CableListPageState extends State<CableListPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CableAddForm()));
+                            builder: (context) => CableAddForm(
+                                cables: widget.dataCable,
+                                onAddCable: widget.addCable)));
                   },
                 ))
           ],
