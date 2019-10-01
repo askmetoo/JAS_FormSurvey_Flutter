@@ -14,6 +14,8 @@ class _CableAddFormState extends State<CableAddForm> {
   final GlobalKey<FormState> _cableForm = GlobalKey<FormState>();
   Cable dataCable = new Cable();
 
+  String _cableTypeValue;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +34,13 @@ class _CableAddFormState extends State<CableAddForm> {
                 children: <Widget>[
                   ListTile(
                     title: FormField<String>(
+                      validator: (value){
+                        if(dataCable.jenisKabel == null){
+                          setState(() {
+                           _cableTypeValue = "Please Choose Cable Type!";
+                          });
+                        }
+                      },
                       builder: (FormFieldState<String> state) {
                         return DropdownButton<String>(
                           isExpanded: true,
@@ -40,6 +49,7 @@ class _CableAddFormState extends State<CableAddForm> {
                           onChanged: (String newvalue) {
                             setState(() {
                               dataCable.jenisKabel = newvalue;
+                              _cableTypeValue = null;
                             });
                           },
                           items: <String>[
@@ -56,6 +66,12 @@ class _CableAddFormState extends State<CableAddForm> {
                       },
                     ),
                   ),
+                  _cableTypeValue == null
+                      ? SizedBox.shrink()
+                      : Text(
+                          _cableTypeValue ?? "",
+                          style: TextStyle(color: Colors.red),
+                        ),
                   ListTile(
                     title: TextFormField(
                         keyboardType: TextInputType.number,
@@ -64,6 +80,11 @@ class _CableAddFormState extends State<CableAddForm> {
                           hintText: 'Type the Length (M)',
                           isDense: true,
                         ),
+                        validator: (value) {
+                          if (dataCable.panjang == null) {
+                            return 'Cable length cannot be empty!';
+                          }
+                        },
                         onChanged: (String val) {
                           setState(() => dataCable.panjang = val);
                         }),
@@ -75,8 +96,11 @@ class _CableAddFormState extends State<CableAddForm> {
                       child: Text('Add Cable'),
                       color: Theme.of(context).accentColor,
                       onPressed: () {
-                        widget.onAddCable(dataCable);
-                        _cableForm.currentState.reset();
+                        if(_cableForm.currentState.validate()){
+                          if(_cableTypeValue == null){
+                            widget.onAddCable(dataCable);
+                          }
+                        }
                       },
                     ),
                   )

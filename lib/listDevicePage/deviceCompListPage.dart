@@ -1,79 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:jas_survey/addComponent/cableAddForm.dart';
-import 'package:jas_survey/models/cable.dart';
+import 'package:jas_survey/addComponent/deviceCompAddForm.dart';
 import 'package:jas_survey/emptyState.dart';
-import 'package:jas_survey/surveyForm.dart';
+import 'package:jas_survey/models/deviceComp.dart';
 
-class CableListPage extends StatefulWidget {
-  final Function addCable;
-  final Function setCable;
-  final Function removeCable;
-  final List<Cable> dataCable;
+class DeviceCompListPage extends StatefulWidget {
+  final Function addDevice;
+  final Function setDevice;
+  final Function removeDevice;
+  final List<DeviceComp> dataDevice;
 
-  CableListPage(
-      {this.addCable, this.setCable, this.dataCable, this.removeCable});
+  DeviceCompListPage(
+      {this.addDevice, this.setDevice, this.removeDevice, this.dataDevice});
 
   @override
-  _CableListPageState createState() => _CableListPageState();
+  _DeviceCompListPageState createState() => _DeviceCompListPageState();
 }
 
-class _CableListPageState extends State<CableListPage> {
+class _DeviceCompListPageState extends State<DeviceCompListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('List of Cables'),
+        title: Text('List of Device and Component'),
         centerTitle: false,
         actions: <Widget>[
           MaterialButton(
-            child: Text(
-              "SAVE",
-              style: TextStyle(color: Colors.white),
-            ),
             onPressed: () {
               Navigator.pop(context);
-              ;
             },
+            child: Text('SAVE', style: TextStyle(color: Colors.white)),
           )
         ],
       ),
       body: Container(
         child: Column(
           children: <Widget>[
-            //FOR DISPLAY CABLE LIST
+            //FOR DISPLAY Display List
             Container(
                 height: MediaQuery.of(context).size.height * 0.80,
-                child: widget.dataCable.length == 0
+                child: widget.dataDevice.length == 0
                     ? Center(
                         child: EmptyState(
-                          title: "Oops..!!",
-                          message: "Belum ada kabel yang diinput",
+                          title: "Empty..",
+                          message: "Belum ada Device / Component yang Diinput",
                         ),
                       )
                     : Container(
                         child: ListView.builder(
-                            itemCount: widget.dataCable.length,
+                            itemCount: widget.dataDevice.length,
                             itemBuilder: (BuildContext context, int index) =>
                                 ListTile(
                                   leading: CircleAvatar(
                                     child: Text(widget
-                                        .dataCable[index].jenisKabel
+                                        .dataDevice[index].deviceCompType
                                         .substring(0, 1)),
                                   ),
-                                  title:
-                                      Text(widget.dataCable[index].jenisKabel),
+                                  title: Text(
+                                      widget.dataDevice[index].deviceCompType),
                                   subtitle: Text(
-                                      widget.dataCable[index].panjang +
-                                          " meter"),
+                                      widget.dataDevice[index].jumlah +
+                                          " unit"),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
-                                      widget.removeCable(index);
+                                      widget.removeDevice(index);
                                     },
                                   ),
                                 )),
-                      ),),
+                      )),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
                 padding: EdgeInsets.only(
@@ -83,7 +78,7 @@ class _CableListPageState extends State<CableListPage> {
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,
                   child: Text(
-                    'Add Cable',
+                    'Add Device Component',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 17.0),
                   ),
@@ -91,9 +86,9 @@ class _CableListPageState extends State<CableListPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CableAddForm(
-                                cables: widget.dataCable,
-                                onAddCable: widget.addCable)));
+                            builder: (context) => DeviceCompAddForm(
+                                deviceComps: widget.dataDevice,
+                                onAddDevice: widget.addDevice)));
                   },
                 ))
           ],

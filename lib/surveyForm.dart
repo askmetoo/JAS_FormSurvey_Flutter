@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
-import 'package:jas_survey/models/cable.dart';
+import 'package:jas_survey/formComponent/cableComponent.dart';
+import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
-import 'package:jas_survey/listDevicePage/FiberDeviceListPage.dart';
-import 'package:jas_survey/listDevicePage/cableListPage.dart';
-import 'package:jas_survey/listDevicePage/switchListPage.dart';
-import 'package:jas_survey/listDevicePage/wirelessListPage.dart';
+
 
 class SurveyForm extends StatefulWidget {
   SurveyForm({Key key}) : super(key: key);
@@ -47,33 +45,6 @@ class _SurveyFormState extends State<SurveyForm> {
 
   String getClientSign() {
     return signClient;
-  }
-
-  //FOR CABLE PROCESS
-  List<Cable> getCables() {
-    return cables;
-  }
-
-  List<Cable> cables = [];
-
-  addCable(Cable newcable) {
-    setState(() {
-      cables.add(newcable);
-      Navigator.pop(context);
-    });
-  }
-
-  removeCable(index) {
-    print(index);
-    setState(() {
-      cables.removeAt(index);
-    });
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => CableListPage(
-            addCable: addCable,
-            setCable: getCables,
-            dataCable: cables,
-            removeCable: removeCable))); 
   }
 
   @override
@@ -178,95 +149,10 @@ class _SurveyFormState extends State<SurveyForm> {
                             padding: EdgeInsets.all(0.0),
                             child: Column(
                               children: <Widget>[
-                                ListTile(
-                                  leading: Icon(Icons.device_hub),
-                                  title: Text(
-                                    'Wireless Device',
-                                    style: TextStyle(
-                                        fontSize: 17.0, color: Colors.black),
-                                  ),
-                                  trailing: RaisedButton(
-                                    elevation: 0,
-                                    color: Theme.of(context).accentColor,
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WirelessListPage()));
-                                    },
-                                  ),
-                                  enabled: false,
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.device_hub),
-                                  title: Text(
-                                    'Switch',
-                                    style: TextStyle(
-                                        fontSize: 17.0, color: Colors.black),
-                                  ),
-                                  trailing: RaisedButton(
-                                    elevation: 0,
-                                    color: Theme.of(context).accentColor,
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SwitchListPage()));
-                                    },
-                                  ),
-                                  enabled: false,
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.device_hub),
-                                  title: Text(
-                                    'Cable',
-                                    style: TextStyle(
-                                        fontSize: 17.0, color: Colors.black),
-                                  ),
-                                  trailing: RaisedButton(
-                                    elevation: 0,
-                                    color: Theme.of(context).accentColor,
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CableListPage(
-                                                      addCable: addCable,
-                                                      setCable: getCables,
-                                                      dataCable: cables,
-                                                      removeCable:
-                                                          removeCable)));
-                                    },
-                                  ),
-                                  enabled: false,
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.device_hub),
-                                  title: Text(
-                                    'Fiber Device',
-                                    style: TextStyle(
-                                        fontSize: 17.0, color: Colors.black),
-                                  ),
-                                  trailing: RaisedButton(
-                                    elevation: 0,
-                                    color: Theme.of(context).accentColor,
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FiberDeviceListPage()));
-                                    },
-                                  ),
-                                  enabled: false,
-                                )
+                                
+                                DeviceComponent(),
+                                CableComponent(),
+                                
                               ],
                             )),
                       ],
