@@ -51,13 +51,15 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                             itemCount: widget.dataDevice.length,
                             itemBuilder: (BuildContext context, int index) =>
                                 ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(widget
-                                        .dataDevice[index].deviceCompType
-                                        .substring(0, 1)),
-                                  ),
-                                  title: Text(
-                                      widget.dataDevice[index].deviceCompType),
+                                  leading: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.15,
+                                      child: Text(
+                                        widget.dataDevice[index].deviceCompType,
+                                      )),
+                                  title: Text(widget.dataDevice[index].vendor +
+                                      " - " +
+                                      widget.dataDevice[index].asetNum),
                                   subtitle: Text(
                                       widget.dataDevice[index].jumlah +
                                           " unit"),
@@ -71,9 +73,11 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                       )),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
-              height: MediaQuery.of(context).size.height * 0.10,
+                height: MediaQuery.of(context).size.height * 0.10,
                 padding: EdgeInsets.only(
-                     left: 15.0, right: 15.0, bottom: MediaQuery.of(context).size.height * 0.01),
+                    left: 15.0,
+                    right: 15.0,
+                    bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
                   height: MediaQuery.of(context).size.height * 0.04,
                   color: Theme.of(context).accentColor,

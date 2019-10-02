@@ -55,11 +55,11 @@ class _CableListPageState extends State<CableListPage> {
                           itemCount: widget.dataCable.length,
                           itemBuilder: (BuildContext context, int index) =>
                               ListTile(
-                                leading: CircleAvatar(
-                                  child: Text(widget.dataCable[index].jenisKabel
-                                      .substring(0, 1)),
+                                leading: Text(
+                                  widget.dataCable[index].jenisKabel,
                                 ),
-                                title: Text(widget.dataCable[index].jenisKabel),
+                                title: Text("Kabel " +
+                                    widget.dataCable[index].jenisKabel),
                                 subtitle: Text(
                                     widget.dataCable[index].panjang + " meter"),
                                 trailing: IconButton(
@@ -77,8 +77,7 @@ class _CableListPageState extends State<CableListPage> {
                 padding: EdgeInsets.only(
                     left: 15.0,
                     right: 15.0,
-                    bottom: MediaQuery.of(context).size.height * 0.01
-                    ),
+                    bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
                   height: MediaQuery.of(context).size.height * 0.04,
                   color: Theme.of(context).accentColor,

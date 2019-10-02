@@ -9,7 +9,6 @@ import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
 
-
 class SurveyForm extends StatefulWidget {
   SurveyForm({Key key}) : super(key: key);
 
@@ -149,10 +148,8 @@ class _SurveyFormState extends State<SurveyForm> {
                             padding: EdgeInsets.all(0.0),
                             child: Column(
                               children: <Widget>[
-                                
                                 DeviceComponent(),
                                 CableComponent(),
-                                
                               ],
                             )),
                       ],

@@ -57,8 +57,8 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                           items: <String>[
                             'Hardware Device',
                             'Switch Component',
-                            'Wireless Device Component',
-                            'Fiber Devie Component',
+                            'Wireless Component',
+                            'Fiber Component',
                             'RJ-45 Connector'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
