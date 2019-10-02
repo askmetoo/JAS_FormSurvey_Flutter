@@ -38,7 +38,7 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
           children: <Widget>[
             //FOR DISPLAY Display List
             Container(
-                height: MediaQuery.of(context).size.height * 0.80,
+                height: MediaQuery.of(context).size.height * 0.76,
                 child: widget.dataDevice.length == 0
                     ? Center(
                         child: EmptyState(
@@ -71,10 +71,11 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                       )),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
+              height: MediaQuery.of(context).size.height * 0.10,
                 padding: EdgeInsets.only(
-                    top: 10.0, left: 15.0, right: 15.0, bottom: 10.0),
+                     left: 15.0, right: 15.0, bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
-                  height: 45.0,
+                  height: MediaQuery.of(context).size.height * 0.04,
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,
                   child: Text(
