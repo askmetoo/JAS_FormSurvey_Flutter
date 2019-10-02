@@ -50,7 +50,7 @@ class _ClientSginFieldState extends State<ClientSginField> {
             Padding(
               padding: EdgeInsets.all(8.0),
             ),
-            _imgClient.buffer.lengthInBytes == 0 ?
+            widget.getSign() == null ?
             Container()
             :
             Center(

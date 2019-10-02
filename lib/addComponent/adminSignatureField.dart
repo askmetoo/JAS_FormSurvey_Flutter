@@ -51,7 +51,7 @@ class _AdminSignFieldState extends State<AdminSignField> {
             Padding(
               padding: EdgeInsets.all(8.0),
             ),
-            _imgAdmin.buffer.lengthInBytes == 0
+            widget.getSign() == null
                 ? Container()
                 : Center(
                     child: LimitedBox(
