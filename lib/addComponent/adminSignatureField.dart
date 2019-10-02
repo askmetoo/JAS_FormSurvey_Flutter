@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
@@ -14,17 +15,35 @@ class AdminSignField extends StatefulWidget {
 }
 
 class _AdminSignFieldState extends State<AdminSignField> {
-  ByteData _imgAdmin = new ByteData(0);
+  // ByteData _imgAdmin = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
 
   final _signAdmin = GlobalKey<SignatureState>();
 
+  void _alertSign(message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Text(message),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    widget.getSign() == null
-        ? print("sign Admin was NULL")
-        : print("sign Admin : " + widget.getSign());
+    // widget.getSign() == null
+    //     ? print("sign Admin was NULL")
+    //     : print("sign Admin : " + widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Signature'),
@@ -55,7 +74,8 @@ class _AdminSignFieldState extends State<AdminSignField> {
                 ? Container()
                 : Center(
                     child: LimitedBox(
-                    maxHeight: 200.0,
+                    maxHeight: MediaQuery.of(context).size.height * 0.20,
+                    // child: Text("tes"),
                     child: Image.memory(base64.decode(widget.getSign())),
                   )),
             Row(
@@ -66,13 +86,17 @@ class _AdminSignFieldState extends State<AdminSignField> {
                   child: Text('Save'),
                   onPressed: () async {
                     final sign = _signAdmin.currentState;
-                    final image = await sign.getData();
-                    var data =
-                        await image.toByteData(format: ImageByteFormat.png);
-                    final encoded = base64.encode(data.buffer.asUint8List());
-                    widget.setSign(encoded);
-                    debugPrint("Admin Signature Retrieved !");
-                    // Navigator.pop(context, data);
+                    if (sign.hasPoints == true) {
+                      final image = await sign.getData();
+                      var data =
+                          await image.toByteData(format: ImageByteFormat.png);
+                      final encoded = base64.encode(data.buffer.asUint8List());
+                      await widget.setSign(encoded);
+                      debugPrint("Admin Signature Retrieved!");
+                      Navigator.pop(context);
+                    } else {
+                      _alertSign("Admin Signature Cannot be Empty!");
+                    }
                   },
                 ),
                 Padding(
@@ -84,8 +108,9 @@ class _AdminSignFieldState extends State<AdminSignField> {
                   onPressed: () async {
                     final sign = _signAdmin.currentState;
                     sign.clear();
-                    widget.setSign(null);
-                    debugPrint("Admin Signature Removed !");
+                    await widget.setSign(null);
+                    debugPrint("Admin Signature Removed!");
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -96,24 +121,3 @@ class _AdminSignFieldState extends State<AdminSignField> {
     );
   }
 }
-
-//Show Signature Result
-// Card(
-//   elevation: 1.0,
-//   child: Column(
-//     children: <Widget>[
-//       _imgAdmin.buffer.lengthInBytes == 0
-//           ? Container()
-//           : LimitedBox(
-//               maxHeight: 200.0,
-//               child: Image.memory(_imgAdmin.buffer
-//                   .asUint8List())), //to show image after click save button
-//       _imgClient.buffer.lengthInBytes == 0
-//           ? Container()
-//           : LimitedBox(
-//               maxHeight: 200.0,
-//               child: Image.memory(_imgClient.buffer
-//                   .asUint8List())), //to show image after click save button
-//     ],
-//   ),
-// ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
@@ -13,17 +14,35 @@ class ClientSginField extends StatefulWidget {
 }
 
 class _ClientSginFieldState extends State<ClientSginField> {
-  ByteData _imgClient = new ByteData(0);
+  // ByteData _imgClient = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
 
   final _signClient = GlobalKey<SignatureState>();
 
+  void _alertSign(message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Text(message),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    widget.getSign() == null ?
-    print("sign Client was NULL"):
-    print("sign Client : " + widget.getSign());
+    // widget.getSign() == null ?
+    // print("sign Client was NULL"):
+    // print("sign Client : " + widget.getSign());
     return Scaffold(
       appBar: AppBar(
         title: Text('Client Signature'),
@@ -50,45 +69,51 @@ class _ClientSginFieldState extends State<ClientSginField> {
             Padding(
               padding: EdgeInsets.all(8.0),
             ),
-            widget.getSign() == null ?
-            Container()
-            :
-            Center(
-              child: LimitedBox(
-                maxHeight: 200.0,
-                child: Image.memory(base64.decode(widget.getSign())),
-              )
-            ),
+            widget.getSign() == null
+                ? Container()
+                : Center(
+                    child: LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.20,
+                    child: Image.memory(base64.decode(widget.getSign())),
+                  )),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Save'),
-                  onPressed: () async{
+                  onPressed: () async {
                     final sign = _signClient.currentState;
-                    final image = await sign.getData();
-                    var data = await image.toByteData(format: ImageByteFormat.png);
-                    final encoded = base64.encode(data.buffer.asUint8List());
-                    widget.setSign(encoded);
-                    // setState(() {
-                    //   _imgClient = data;
-                    // });
-                    debugPrint("Client Signature Retrieved !");
+                    if (sign.hasPoints == true) {
+                      final image = await sign.getData();
+                      var data =
+                          await image.toByteData(format: ImageByteFormat.png);
+                      final encoded = base64.encode(data.buffer.asUint8List());
+                      await widget.setSign(encoded);
+                      debugPrint("Client Signature Retrieved!");
+                      Navigator.pop(context);
+                    } else {
+                      _alertSign("Client Signature Cannot be Empty!");
+                    }
                   },
                 ),
-                 Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 8.0),
                 ),
                 MaterialButton(
                   color: Colors.green,
                   child: Text('Clear'),
-                  onPressed: () async{
+                  onPressed: () async {
                     final sign = _signClient.currentState;
                     sign.clear();
-                    widget.setSign(null);
-                    debugPrint("Client Signature Removed !");
+                    await widget.setSign(null);
+                    debugPrint("Client Signature Removed!");
+                    Navigator.pop(context);
                   },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.03),
                 ),
               ],
             )
@@ -98,23 +123,3 @@ class _ClientSginFieldState extends State<ClientSginField> {
     );
   }
 }
-//Show Signature Result
-            // Card(
-            //   elevation: 1.0,
-            //   child: Column(
-            //     children: <Widget>[
-            //       _imgAdmin.buffer.lengthInBytes == 0
-            //           ? Container()
-            //           : LimitedBox(
-            //               maxHeight: 200.0,
-            //               child: Image.memory(_imgAdmin.buffer
-            //                   .asUint8List())), //to show image after click save button
-            //       _imgClient.buffer.lengthInBytes == 0
-            //           ? Container()
-            //           : LimitedBox(
-            //               maxHeight: 200.0,
-            //               child: Image.memory(_imgClient.buffer
-            //                   .asUint8List())), //to show image after click save button
-            //     ],
-            //   ),
-            // ),
