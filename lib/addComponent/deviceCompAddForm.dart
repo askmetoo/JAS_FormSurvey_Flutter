@@ -20,6 +20,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Device & Component Add Form'),
         centerTitle: false,

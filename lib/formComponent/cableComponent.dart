@@ -4,51 +4,21 @@ import 'package:jas_survey/listDevicePage/cableListPage.dart';
 import 'package:jas_survey/models/cable.dart';
 
 class CableComponent extends StatefulWidget {
+  final Function addCable, getCables, removeCable, setCableList;
+  final List<Cable> cables;
+
+  CableComponent({this.addCable, this.getCables, this.removeCable, this.cables, this.setCableList});
+
   @override
   _CableComponentState createState() => _CableComponentState();
 }
 
 class _CableComponentState extends State<CableComponent> {
-  List<Cable> cables = [];
-  List<Cable> getCables() {
-    return cables;
-  }
-
-  void _removeCableDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            content: Text("Cable removed!"),
-            actions: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Close'),
-              )
-            ],
-          );
-        });
-  }
-
-  addCable(Cable newCable) {
-    setState(() {
-      cables.add(newCable);
-      Navigator.pop(context);
-    });
-  }
-
-  removeCable(index) {
-    // print(index);
-    setState(() {
-      cables.removeAt(index);
-    });
-    _removeCableDialog();
-  }
+  // List<Cable> cables = [];
 
   @override
   Widget build(BuildContext context) {
+    
     return ListTile(
       leading: Icon(Icons.device_hub),
       title: Text(
@@ -64,13 +34,50 @@ class _CableComponentState extends State<CableComponent> {
               context,
               MaterialPageRoute(
                   builder: (context) => CableListPage(
-                      addCable: addCable,
-                      setCable: getCables,
-                      dataCable: cables,
-                      removeCable: removeCable)));
+                      addCable: widget.addCable,
+                      setCable: widget.getCables,
+                      dataCable: widget.cables,
+                      removeCable: widget.removeCable,
+                      setCableList: widget.setCableList)));
         },
       ),
       enabled: false,
     );
   }
+  // void _removeCableDialog() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return CupertinoAlertDialog(
+  //           content: Text("Cable removed!"),
+  //           actions: <Widget>[
+  //             MaterialButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text('Close'),
+  //             )
+  //           ],
+  //         );
+  //       });
+  // }
+
+  // List<Cable> getCables() {
+  //   return cables;
+  // }
+
+  // addCable(Cable newCable) {
+  //   setState(() {
+  //     cables.add(newCable);
+  //     Navigator.pop(context);
+  //   });
+  // }
+
+  // removeCable(index) {
+  //   // print(index);
+  //   setState(() {
+  //     cables.removeAt(index);
+  //   });
+  //   _removeCableDialog();
+  // }
 }

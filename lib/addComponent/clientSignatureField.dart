@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
 import 'dart:ui';
 
@@ -44,6 +42,7 @@ class _ClientSginFieldState extends State<ClientSginField> {
     // print("sign Client was NULL"):
     // print("sign Client : " + widget.getSign());
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Client Signature'),
         centerTitle: false,
@@ -61,7 +60,7 @@ class _ClientSginFieldState extends State<ClientSginField> {
                 key: _signClient,
                 onSign: () {
                   final sign = _signClient.currentState;
-                  debugPrint('${sign.points.length} points in the singnature');
+                  // debugPrint('${sign.points.length} points in the singnature');
                 },
               ),
               color: Colors.black12,

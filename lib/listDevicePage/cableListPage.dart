@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:jas_survey/addComponent/cableAddForm.dart';
 import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/emptyState.dart';
-import 'package:jas_survey/surveyForm.dart';
 
 class CableListPage extends StatefulWidget {
   final Function addCable;
   final Function setCable;
   final Function removeCable;
+  final Function setCableList;
   final List<Cable> dataCable;
 
   CableListPage(
-      {this.addCable, this.setCable, this.dataCable, this.removeCable});
+      {this.addCable, this.setCable, this.dataCable, this.removeCable, this.setCableList});
 
   @override
   _CableListPageState createState() => _CableListPageState();
 }
 
 class _CableListPageState extends State<CableListPage> {
+  bool isEmptyData = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +32,8 @@ class _CableListPageState extends State<CableListPage> {
               "SAVE",
               style: TextStyle(color: Colors.white),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await widget.setCableList(widget.dataCable);
               Navigator.pop(context);
             },
           )

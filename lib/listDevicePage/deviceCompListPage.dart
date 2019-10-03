@@ -7,10 +7,11 @@ class DeviceCompListPage extends StatefulWidget {
   final Function addDevice;
   final Function setDevice;
   final Function removeDevice;
+  final Function setDeviceList;
   final List<DeviceComp> dataDevice;
 
   DeviceCompListPage(
-      {this.addDevice, this.setDevice, this.removeDevice, this.dataDevice});
+      {this.addDevice, this.setDevice, this.removeDevice, this.dataDevice, this.setDeviceList});
 
   @override
   _DeviceCompListPageState createState() => _DeviceCompListPageState();
@@ -26,10 +27,14 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
         centerTitle: false,
         actions: <Widget>[
           MaterialButton(
-            onPressed: () {
+            child: Text(
+              "SAVE",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () async {
+              await widget.setDeviceList(widget.dataDevice);
               Navigator.pop(context);
             },
-            child: Text('SAVE', style: TextStyle(color: Colors.white)),
           )
         ],
       ),

@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:jas_survey/flutter_signature_pad.dart';
 import 'dart:ui';
 
@@ -15,7 +13,6 @@ class AdminSignField extends StatefulWidget {
 }
 
 class _AdminSignFieldState extends State<AdminSignField> {
-  // ByteData _imgAdmin = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
 
@@ -45,6 +42,7 @@ class _AdminSignFieldState extends State<AdminSignField> {
     //     ? print("sign Admin was NULL")
     //     : print("sign Admin : " + widget.getSign());
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Admin Signature'),
         centerTitle: false,
@@ -62,7 +60,7 @@ class _AdminSignFieldState extends State<AdminSignField> {
                 key: _signAdmin,
                 onSign: () {
                   final sign = _signAdmin.currentState;
-                  debugPrint('${sign.points.length} points in the singnature');
+                  // debugPrint('${sign.points.length} points in the singnature');
                 },
               ),
               color: Colors.black12,
@@ -75,7 +73,7 @@ class _AdminSignFieldState extends State<AdminSignField> {
                 : Center(
                     child: LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.20,
-                    // child: Text("tes"),
+                    // child: Text("tes");
                     child: Image.memory(base64.decode(widget.getSign())),
                   )),
             Row(

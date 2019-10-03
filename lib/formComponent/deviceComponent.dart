@@ -4,49 +4,16 @@ import 'package:jas_survey/listDevicePage/deviceCompListPage.dart';
 import 'package:jas_survey/models/deviceComp.dart';
 
 class DeviceComponent extends StatefulWidget {
+  final Function addDevice, getDevices, removeDevice, setDeviceList;
+  final List<DeviceComp> deviceComps;
+
+  DeviceComponent(
+      {this.addDevice, this.getDevices, this.removeDevice, this.setDeviceList, this.deviceComps});
   @override
   _DeviceComponentState createState() => _DeviceComponentState();
 }
 
 class _DeviceComponentState extends State<DeviceComponent> {
-  List<DeviceComp> deviceComps = [];
-  List<DeviceComp> getDevices() {
-    return deviceComps;
-  }
-
-  void _removeDeviceDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            content: Text("Device removed!"),
-            actions: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Close'),
-              )
-            ],
-          );
-        });
-  }
-
-  addDevice(DeviceComp newDevice) {
-    setState(() {
-      deviceComps.add(newDevice);
-      Navigator.pop(context);
-    });
-  }
-
-  removeDevice(index) {
-    // print(index);
-    setState(() {
-      deviceComps.removeAt(index);
-    });
-    _removeDeviceDialog();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -64,10 +31,11 @@ class _DeviceComponentState extends State<DeviceComponent> {
               context,
               MaterialPageRoute(
                   builder: (context) => DeviceCompListPage(
-                        addDevice: addDevice,
-                        setDevice: getDevices,
-                        dataDevice: deviceComps,
-                        removeDevice: removeDevice,
+                        addDevice: widget.addDevice,
+                        setDevice: widget.getDevices,
+                        dataDevice: widget.deviceComps,
+                        removeDevice: widget.removeDevice,
+                        setDeviceList: widget.setDeviceList,
                       )));
         },
       ),

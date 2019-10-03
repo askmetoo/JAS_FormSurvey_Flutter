@@ -1,13 +1,14 @@
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
+import 'package:jas_survey/models/beritaAcara.dart';
+import 'package:jas_survey/models/deviceComp.dart';
+
+import 'models/cable.dart';
 
 class SurveyForm extends StatefulWidget {
   SurveyForm({Key key}) : super(key: key);
@@ -17,18 +18,93 @@ class SurveyForm extends StatefulWidget {
 }
 
 class _SurveyFormState extends State<SurveyForm> {
-  String jenisPerangkat;
-  DateTime _date = DateTime.now();
+  BeritaAcara surveyData = new BeritaAcara();
+  DateTime date = DateTime.now();
   final formSurvey = GlobalKey<FormState>();
-  static var color = Colors.red;
-  static var strokeWidth = 5.0;
+
+  String location;
   String signAdmin;
+  String adminName;
+  String clientName;
   String signClient;
+
+  void _removeDialog(message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Text(message),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
+  }
+
+  //For get DeviceList
+  List<DeviceComp> deviceComps = [];
+  List<DeviceComp> getDevices() {
+    return deviceComps;
+  }
+
+  setDeviceList(List<DeviceComp> deviceComps) {
+    setState(() {
+      surveyData.deviceList = deviceComps;
+    });
+  }
+
+  addDevice(DeviceComp newDevice) {
+    setState(() {
+      deviceComps.add(newDevice);
+      Navigator.pop(context);
+    });
+  }
+
+  removeDevice(index) {
+    // print(index);
+    setState(() {
+      deviceComps.removeAt(index);
+    });
+    _removeDialog('Device removed!');
+  }
+
+  //For get CableList
+  List<Cable> cables = [];
+  List<Cable> getCables() {
+    return cables;
+  }
+
+  setCableList(List<Cable> cables) {
+    setState(() {
+      surveyData.cablesList = cables;
+    });
+  }
+
+  addCable(Cable newCable) {
+    setState(() {
+      cables.add(newCable);
+      Navigator.pop(context);
+    });
+  }
+
+  removeCable(index) {
+    // print(index);
+    setState(() {
+      cables.removeAt(index);
+    });
+    _removeDialog("Cable removed!");
+  }
 
   //for signature
   setSignAdmin(String sign) {
     setState(() {
       signAdmin = sign;
+      surveyData.adminSign = sign.toString();
     });
   }
 
@@ -39,6 +115,7 @@ class _SurveyFormState extends State<SurveyForm> {
   setSignClient(String sign) {
     setState(() {
       signClient = sign;
+      surveyData.clientSign = sign.toString();
     });
   }
 
@@ -48,7 +125,17 @@ class _SurveyFormState extends State<SurveyForm> {
 
   @override
   Widget build(BuildContext context) {
+    surveyData.cablesList == null ?
+    debugPrint("surveyData.cableList is empty/null"):
+    debugPrint(surveyData.cablesList.length.toString());
+    surveyData.deviceList == null ?
+    debugPrint("surveyData.deviceList is empty/null"):
+    debugPrint(surveyData.deviceList.length.toString());
+    // debugPrint("total kabel: "+ cables.length.toString());
+    // debugPrint("total device: "+ deviceComps.length.toString());
+    // print(getCableList());
     return Scaffold(
+      // resizeToAvoidBottomPadding: false,
       key: Key('FormKey'),
       appBar: AppBar(
         title: Text('Form Berita Acara'),
@@ -97,7 +184,7 @@ class _SurveyFormState extends State<SurveyForm> {
                               leading: Icon(Icons.date_range),
                               trailing: Icon(Icons.edit),
                               title: Text(
-                                "${_date.day}-${_date.month}-${_date.year}",
+                                "${date.day}-${date.month}-${date.year}",
                                 textAlign: TextAlign.left,
                               )),
                         ),
@@ -107,6 +194,12 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                location = value;
+                                surveyData.location = value;
+                              });
+                            },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Location Cannot be Empty!';
@@ -148,8 +241,21 @@ class _SurveyFormState extends State<SurveyForm> {
                             padding: EdgeInsets.all(0.0),
                             child: Column(
                               children: <Widget>[
-                                DeviceComponent(),
-                                CableComponent(),
+                                DeviceComponent(
+                                  addDevice: addDevice,
+                                  getDevices: getDevices,
+                                  removeDevice: removeDevice,
+                                  deviceComps: deviceComps,
+                                  setDeviceList: setDeviceList,
+                                  // getDeviceList: getDeviceList,
+                                ),
+                                CableComponent(
+                                  addCable: addCable,
+                                  getCables: getCables,
+                                  removeCable: removeCable,
+                                  cables: cables,
+                                  setCableList: setCableList,
+                                ),
                               ],
                             )),
                       ],
@@ -179,6 +285,12 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                adminName = value;
+                                surveyData.adminName = value;
+                              });
+                            },
                             key: Key('keyAdminName'),
                             decoration: InputDecoration(
                               labelText: 'Admin Name',
@@ -225,6 +337,12 @@ class _SurveyFormState extends State<SurveyForm> {
                             onPressed: () {},
                           ),
                           title: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                clientName = value;
+                                surveyData.clientName = value;
+                              });
+                            },
                             key: Key('keyClientName'),
                             decoration: InputDecoration(
                               labelText: 'Client Name',
@@ -289,9 +407,20 @@ class _SurveyFormState extends State<SurveyForm> {
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white, fontSize: 17.0),
                         ),
-                        onPressed: () {
+                        onPressed: () async{
                           if (formSurvey.currentState.validate()) {
                             debugPrint('Form Submitted');
+                            print(
+                                surveyData.date.toString() +
+                                surveyData.location +
+                                surveyData.adminName +
+                                surveyData.clientName
+                            );
+                            print(surveyData.adminSign.toString() +
+                                surveyData.clientSign.toString()
+                            );
+                            print(surveyData.cablesList.length.toString() +
+                                surveyData.deviceList.length.toString());
                           }
                         },
                       ))
@@ -310,13 +439,14 @@ class _SurveyFormState extends State<SurveyForm> {
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime selectDate = await showDatePicker(
       context: context,
-      initialDate: _date,
+      initialDate: date,
       firstDate: new DateTime(2016),
       lastDate: new DateTime(2030),
     );
-    if (selectDate != null && selectDate != _date) {
+    if (selectDate != null) {
       setState(() {
-        _date = selectDate;
+        date = selectDate;
+        surveyData.date = selectDate;
       });
     }
   }
