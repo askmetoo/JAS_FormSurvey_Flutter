@@ -33,6 +33,7 @@ class _CableAddFormState extends State<CableAddForm> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   ListTile(
+                    key: Key('cableType'),
                     title: FormField<String>(
                       validator: (value){
                         if(dataCable.jenisKabel == null){
@@ -74,6 +75,7 @@ class _CableAddFormState extends State<CableAddForm> {
                         ),
                   ListTile(
                     title: TextFormField(
+                        key: Key('cableLength'),
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText: 'Cable Length',
@@ -92,6 +94,7 @@ class _CableAddFormState extends State<CableAddForm> {
                   Padding(
                     padding: EdgeInsets.all(10.0),
                     child: MaterialButton(
+                      key: Key('addCableSubmitBtn'),
                       minWidth: double.infinity,
                       child: Text('Add Cable'),
                       color: Theme.of(context).accentColor,

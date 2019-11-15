@@ -35,6 +35,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   ListTile(
+                    key: Key('deviceType'),
                     title: FormField<String>(
                       validator: (value) {
                         if (dataDevice.deviceCompType == null) {
@@ -79,6 +80,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                         ),
                   ListTile(
                     title: TextFormField(
+                      key: Key("vendorComp"),
                       validator: (value) {
                         if (dataDevice.vendor == null) {
                           return 'Vendor cannot be empty!';
@@ -95,6 +97,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                   ),
                   ListTile(
                     title: TextFormField(
+                      key: Key("asetNumComp"),
                       validator: (value) {
                         if (dataDevice.asetNum == null) {
                           return 'Asset Number cannot be empty!';
@@ -111,6 +114,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                   ),
                   ListTile(
                     title: TextFormField(
+                      key: Key("valueComp"),
                       validator: (value) {
                         if (dataDevice.vendor == null) {
                           return 'Amount cannot be empty!';
@@ -129,6 +133,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                   Padding(
                     padding: EdgeInsets.all(10.0),
                     child: MaterialButton(
+                      key: Key("addComponentSubmitBtn"),
                       minWidth: double.infinity,
                       child: Text('Add Device'),
                       color: Theme.of(context).accentColor,

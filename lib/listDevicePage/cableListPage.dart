@@ -28,6 +28,7 @@ class _CableListPageState extends State<CableListPage> {
         centerTitle: false,
         actions: <Widget>[
           MaterialButton(
+            key: Key('saveCableBtn'),
             child: Text(
               "SAVE",
               style: TextStyle(color: Colors.white),
@@ -81,6 +82,7 @@ class _CableListPageState extends State<CableListPage> {
                     right: 15.0,
                     bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
+                  key: Key('btnToCableForm'),
                   height: MediaQuery.of(context).size.height * 0.04,
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,

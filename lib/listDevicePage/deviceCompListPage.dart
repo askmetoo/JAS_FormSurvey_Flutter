@@ -27,6 +27,7 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
         centerTitle: false,
         actions: <Widget>[
           MaterialButton(
+            key: Key('saveCompBtn'),
             child: Text(
               "SAVE",
               style: TextStyle(color: Colors.white),
@@ -84,6 +85,7 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                     right: 15.0,
                     bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
+                  key: Key('btnToDeviceForm'),
                   height: MediaQuery.of(context).size.height * 0.04,
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,

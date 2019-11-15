@@ -23,6 +23,7 @@ class _DeviceComponentState extends State<DeviceComponent> {
         style: TextStyle(fontSize: 17.0, color: Colors.black),
       ),
       trailing: RaisedButton(
+        key: Key("deviceAdd"),
         elevation: 0,
         color: Theme.of(context).accentColor,
         child: Text('Add'),

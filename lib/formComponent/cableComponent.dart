@@ -26,6 +26,7 @@ class _CableComponentState extends State<CableComponent> {
         style: TextStyle(fontSize: 17.0, color: Colors.black),
       ),
       trailing: RaisedButton(
+        key: Key('cableAdd'),
         elevation: 0,
         color: Theme.of(context).accentColor,
         child: Text('Add'),

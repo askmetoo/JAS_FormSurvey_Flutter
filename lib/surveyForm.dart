@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
+import 'package:jas_survey/apiService.dart';
+import 'package:jas_survey/drawer.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
+import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
+import 'package:jas_survey/scanForm.dart';
 
 import 'models/cable.dart';
 
@@ -18,6 +22,10 @@ class SurveyForm extends StatefulWidget {
 }
 
 class _SurveyFormState extends State<SurveyForm> {
+  ApiService _apiService = ApiService();
+
+  List<BeritaAcara> listSurvey = [];
+
   BeritaAcara surveyData = new BeritaAcara();
   DateTime date = DateTime.now();
   final formSurvey = GlobalKey<FormState>();
@@ -44,6 +52,38 @@ class _SurveyFormState extends State<SurveyForm> {
             ],
           );
         });
+  }
+
+  // for add survey into list
+  addSurvey(BeritaAcara newSurvey){
+    setState(() {
+     listSurvey.add(newSurvey); 
+    });
+    // debugPrint("jumlah survey: "+listSurvey.length.toString());
+  }
+
+  newSurvey(BeritaAcara newData){
+    String locationData = newData.location;
+    String clientNameData = newData.clientName;
+    String adminNameData = newData.adminName;
+    DateTime dateData = newData.date;
+    // String adminSignData = newData.adminSign;
+    
+    // print(locationData+", "+clientNameData+", "+adminNameData+", ${dateData.year}-${dateData.month}-${dateData.day}");
+
+    // print(adminSignData);
+    BeritaAcara survey = BeritaAcara(location: locationData, adminName: adminNameData, clientName: clientNameData, date: dateData, adminSign: "tanda tangan admin", clientSign: "tanda tangan client");
+    _apiService.createSurvey(survey).then((isSuccess){
+      if(isSuccess){
+        print('sukses nambah data');
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => HomeJAS()
+        ));
+      }
+      else{
+        print("gagal");
+      }
+    });
   }
 
   //For get DeviceList
@@ -93,7 +133,6 @@ class _SurveyFormState extends State<SurveyForm> {
   }
 
   removeCable(index) {
-    // print(index);
     setState(() {
       cables.removeAt(index);
     });
@@ -125,17 +164,25 @@ class _SurveyFormState extends State<SurveyForm> {
 
   @override
   Widget build(BuildContext context) {
-    surveyData.cablesList == null ?
-    debugPrint("surveyData.cableList is empty/null"):
-    debugPrint(surveyData.cablesList.length.toString());
-    surveyData.deviceList == null ?
-    debugPrint("surveyData.deviceList is empty/null"):
-    debugPrint(surveyData.deviceList.length.toString());
+    // debugPrint("jumlah survey: "+listSurvey.length.toString());
+    setState(() {
+      date = date;
+      surveyData.date = date;
+    });
+    // surveyData.cablesList == null ?
+    // debugPrint("surveyData.cableList is empty/null"):
+    // debugPrint(surveyData.cablesList.length.toString());
+    // surveyData.deviceList == null ?
+    // debugPrint("surveyData.deviceList is empty/null"):
+    // debugPrint(surveyData.deviceList.length.toString());
     // debugPrint("total kabel: "+ cables.length.toString());
     // debugPrint("total device: "+ deviceComps.length.toString());
     // print(getCableList());
     return Scaffold(
-      // resizeToAvoidBottomPadding: false,
+      drawer: Drawer(
+        key: Key("drawerBtn"),
+        child: DrawerUI(),
+      ),
       key: Key('FormKey'),
       appBar: AppBar(
         title: Text('Form Berita Acara'),
@@ -399,28 +446,85 @@ class _SurveyFormState extends State<SurveyForm> {
                       padding: EdgeInsets.only(
                           top: 10.0, left: 15.0, right: 15.0, bottom: 10.0),
                       child: MaterialButton(
+                        key: Key('submitFormBtn'),
                         height: 45.0,
                         color: Theme.of(context).accentColor,
                         minWidth: double.infinity,
                         child: Text(
-                          'Sudmit',
+                          'Submit',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white, fontSize: 17.0),
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           if (formSurvey.currentState.validate()) {
-                            debugPrint('Form Submitted');
-                            print(
-                                surveyData.date.toString() +
-                                surveyData.location +
-                                surveyData.adminName +
-                                surveyData.clientName
-                            );
-                            print(surveyData.adminSign.toString() +
-                                surveyData.clientSign.toString()
-                            );
-                            print(surveyData.cablesList.length.toString() +
-                                surveyData.deviceList.length.toString());
+                            newSurvey(surveyData);
+                            addSurvey(surveyData);
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return CupertinoAlertDialog(
+                            //         content: SingleChildScrollView(
+                            //           child: Column(
+                            //             children: <Widget>[
+                            //               Text("date: ${surveyData.date.day}-${surveyData.date.month}-${surveyData.date.year}"),
+                            //               Text("location: " +
+                            //                   surveyData.location),
+                            //               Text("admin Name: " +
+                            //                   surveyData.adminName),
+                            //               Text("admin Singature: " +
+                            //                   surveyData.adminSign
+                            //                       .substring(0, 10)),
+                            //               Text("client name: " +
+                            //                   surveyData.clientName),
+                            //               Text("client signature: " +
+                            //                   surveyData.clientSign
+                            //                       .substring(0, 10)),
+                            //               surveyData.cablesList == null ?
+                            //               Text("jumlah jenis kabel 0"):
+                            //               Text("jumlah jenis kabel: " +
+                            //                   surveyData.cablesList.length
+                            //                       .toString()),
+                            //               surveyData.deviceList == null?
+                            //               Text("jumlah jenis device 0"):
+                            //               Text("jumlah jenis device: " +
+                            //                   surveyData.deviceList.length
+                            //                       .toString()),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //         actions: <Widget>[
+                            //           MaterialButton(
+                            //             onPressed: () async {
+
+                            //               Navigator.push(
+                            //                   context,
+                            //                   MaterialPageRoute(
+                            //                       builder: (context) =>
+                            //                           HomeJAS()
+                            //                   )
+                            //               );
+                            //               // Navigator.pop(context);
+                            //             },
+                            //             child: Text('Close'),
+                            //           )
+                            //         ],
+                            //       );
+                            //     });
+
+                            // print(
+                            //   surveyData.date.toString()+
+                            //     // "${surveyData.date.day}-${surveyData.date.month}-${surveyData.date.year}" +
+                            //         surveyData.location +
+                            //         surveyData.adminName +
+                            //         surveyData.clientName);
+                            // print(surveyData.adminSign
+                            //         .toString()
+                            //         .substring(0, 10) +
+                            //     surveyData.clientSign.toString());
+                            // surveyData.cablesList == null ?
+                            // print("cable list null"):print("cable list total are : "+surveyData.cablesList.length.toString());
+                            // surveyData.deviceList == null ?
+                            // print("device list null"):print("device list total are : "+surveyData.deviceList.length.toString());
                           }
                         },
                       ))

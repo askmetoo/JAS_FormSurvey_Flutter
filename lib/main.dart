@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:jas_survey/homeJAS.dart';
 import 'surveyForm.dart';
 
 void main() async {
@@ -13,13 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'JAS APP',
       theme: ThemeData(
         primarySwatch: Colors.teal,
         accentColor: Color(0xFF1DCC8C),
         platform: TargetPlatform.iOS
       ),
-      home: SurveyForm(),
+      home: HomeJAS(),
+      // home: SurveyForm(),
     );
   }
 }
