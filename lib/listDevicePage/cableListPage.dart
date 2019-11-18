@@ -59,12 +59,12 @@ class _CableListPageState extends State<CableListPage> {
                           itemBuilder: (BuildContext context, int index) =>
                               ListTile(
                                 leading: Text(
-                                  widget.dataCable[index].jenisKabel,
+                                  widget.dataCable[index].cable_type,
                                 ),
                                 title: Text("Kabel " +
-                                    widget.dataCable[index].jenisKabel),
+                                    widget.dataCable[index].cable_type),
                                 subtitle: Text(
-                                    widget.dataCable[index].panjang + " meter"),
+                                    widget.dataCable[index].cable_length.toString() + " meter"),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
@@ -83,7 +83,7 @@ class _CableListPageState extends State<CableListPage> {
                     bottom: MediaQuery.of(context).size.height * 0.01),
                 child: MaterialButton(
                   key: Key('btnToCableForm'),
-                  height: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.of(context).size.height * 0.07,
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,
                   child: Text(

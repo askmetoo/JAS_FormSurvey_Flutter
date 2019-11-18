@@ -67,7 +67,7 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                                       " - " +
                                       widget.dataDevice[index].asetNum),
                                   subtitle: Text(
-                                      widget.dataDevice[index].jumlah +
+                                      widget.dataDevice[index].jumlah.toString() +
                                           " unit"),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),

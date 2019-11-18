@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,7 +26,7 @@ class SurveyForm extends StatefulWidget {
 class _SurveyFormState extends State<SurveyForm> {
   ApiService _apiService = ApiService();
 
-  List<BeritaAcara> listSurvey = [];
+  // List<BeritaAcara> listSurvey = [];
 
   BeritaAcara surveyData = new BeritaAcara();
   DateTime date = DateTime.now();
@@ -55,33 +57,59 @@ class _SurveyFormState extends State<SurveyForm> {
   }
 
   // for add survey into list
-  addSurvey(BeritaAcara newSurvey){
-    setState(() {
-     listSurvey.add(newSurvey); 
-    });
-    // debugPrint("jumlah survey: "+listSurvey.length.toString());
-  }
+  // addSurvey(BeritaAcara newSurvey){
+  //   setState(() {
+  //    listSurvey.add(newSurvey); 
+  //   });
+  //   // debugPrint("jumlah survey: "+listSurvey.length.toString());
+  // }
 
   newSurvey(BeritaAcara newData){
     String locationData = newData.location;
     String clientNameData = newData.clientName;
     String adminNameData = newData.adminName;
     DateTime dateData = newData.date;
-    // String adminSignData = newData.adminSign;
-    
-    // print(locationData+", "+clientNameData+", "+adminNameData+", ${dateData.year}-${dateData.month}-${dateData.day}");
+    String adminSignData = newData.adminSign;
+    String clientSignData = newData.clientSign;
 
-    // print(adminSignData);
-    BeritaAcara survey = BeritaAcara(location: locationData, adminName: adminNameData, clientName: clientNameData, date: dateData, adminSign: "tanda tangan admin", clientSign: "tanda tangan client");
-    _apiService.createSurvey(survey).then((isSuccess){
-      if(isSuccess){
-        print('sukses nambah data');
+    List<DeviceComp> deviceListData = newData.deviceList;
+    List<Cable> cableListData = newData.cablesList;
+
+    
+    
+    
+    // for (var i = 0; i < cableListData.length; i++) {
+    //   cableListData[i].id_survey = 2;
+    // }
+    // print(json.encode(cableListData));
+
+    BeritaAcara survey = BeritaAcara(location: locationData, adminName: adminNameData, clientName: clientNameData, date: dateData, adminSign: adminSignData, clientSign: clientSignData);
+    _apiService.createSurvey(survey).then((idSurvey){
+      if(idSurvey != "failed"){
+        cableListData == null ? print("0 cable"):print(cableListData.length);
+        if(cableListData != null){
+          for (var i = 0; i < cableListData.length; i++) {
+            cableListData[i].id_survey = int.parse(idSurvey);
+          }
+          _apiService.createCable(cableListData);
+          // print('sukses insert cable');
+        }
+        deviceListData == null ? print("0 device"):print(deviceListData.length);
+        if(deviceListData != null){
+          for (var i = 0; i < deviceListData.length; i++) {
+            deviceListData[i].id_survey = int.parse(idSurvey);
+          }
+          _apiService.createDevice(deviceListData);
+          // print('sukses insert device');
+        }
+        // print(idSurvey);
+        // print('sukses nambah data');
         Navigator.push(context, MaterialPageRoute(
           builder: (context) => HomeJAS()
         ));
       }
       else{
-        print("gagal");
+        print("fail to insert survey");
       }
     });
   }
@@ -144,6 +172,7 @@ class _SurveyFormState extends State<SurveyForm> {
     setState(() {
       signAdmin = sign;
       surveyData.adminSign = sign.toString();
+      print(surveyData.adminSign.length);
     });
   }
 
@@ -169,15 +198,6 @@ class _SurveyFormState extends State<SurveyForm> {
       date = date;
       surveyData.date = date;
     });
-    // surveyData.cablesList == null ?
-    // debugPrint("surveyData.cableList is empty/null"):
-    // debugPrint(surveyData.cablesList.length.toString());
-    // surveyData.deviceList == null ?
-    // debugPrint("surveyData.deviceList is empty/null"):
-    // debugPrint(surveyData.deviceList.length.toString());
-    // debugPrint("total kabel: "+ cables.length.toString());
-    // debugPrint("total device: "+ deviceComps.length.toString());
-    // print(getCableList());
     return Scaffold(
       drawer: Drawer(
         key: Key("drawerBtn"),
@@ -458,7 +478,7 @@ class _SurveyFormState extends State<SurveyForm> {
                         onPressed: () async {
                           if (formSurvey.currentState.validate()) {
                             newSurvey(surveyData);
-                            addSurvey(surveyData);
+                            // addSurvey(surveyData);
                             // showDialog(
                             //     context: context,
                             //     builder: (context) {

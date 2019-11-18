@@ -127,7 +127,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                         isDense: true,
                       ),
                       onChanged: (String val) =>
-                          setState(() => dataDevice.jumlah = val),
+                          setState(() => dataDevice.jumlah = int.parse(val)),
                     ),
                   ),
                   Padding(

@@ -131,7 +131,8 @@ class _HomeJASState extends State<HomeJAS> {
               return Center(
                 child:Text("Something wrong with message: ${snapshot.error.toString()}"),
               );
-            } else if(snapshot.connectionState == ConnectionState.done){
+            } 
+            else if(snapshot.connectionState == ConnectionState.done){
               List<BeritaAcara> surveys = snapshot.data;
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -153,7 +154,13 @@ class _HomeJASState extends State<HomeJAS> {
                                 style: Theme.of(context).textTheme.title,
                               ),
                               Text("${survey.date.day}-${survey.date.month}-${survey.date.year}"),
-                              Text(survey.clientName)
+                              Text(survey.clientName),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(icon: Icon(Icons.details), onPressed: () {print(survey.id_survey.toString());},)
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -163,7 +170,8 @@ class _HomeJASState extends State<HomeJAS> {
                   itemCount: surveys.length,
                 ),
               );
-            } else {
+            } 
+            else {
               return Center(
                 child: CircularProgressIndicator(),
               );
