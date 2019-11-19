@@ -41,32 +41,24 @@ class ApiService {
     }
   }
 
-  Future<bool> createCable(List<Cable> data) async {
-    for (var i = 0; i < data.length; i++) {
-      final response = await client.post("$getURLCable",
-        headers: {"content-type": "application/josn"}, body: json.encode(data[i]));
-        print(response.statusCode);
-    print(response.reasonPhrase);
-    if (response.statusCode == 201) {
-      print('sukses insert cable');
+  Future<bool> createCable(Cable data) async {
+    final response = await client.post("$getURLCable", headers: {"content-type": "application/json"},body: json.encode(data.toJson()));
+    print(json.encode(data.toJson()));
+    print(response.statusCode);
+    if (response.statusCode ==201) {
       return true;
     } else {
       return false;
-    }  
     }
-    
     // print(json.encode(data));
     
   }
 
-  Future<bool> createDevice(List<DeviceComp> data) async {
-    final response = await client.post("$getURLDevice",
-        headers: {"content-type": "application/josn"}, body: json.encode(data));
-    print(json.encode(data));
+  Future<bool> createDevice(DeviceComp data) async {
+    final response = await client.post("$getURLDevice",headers: {"content-type": "application/json"}, body: json.encode(data.toJson()));
+    print(json.encode(data.toJson()));
     print(response.statusCode);
-    print(response.reasonPhrase);
-    if (response.statusCode == 201) {
-      print('sukses insert device');
+    if (response.statusCode ==201) {
       return true;
     } else {
       return false;

@@ -90,17 +90,22 @@ class _SurveyFormState extends State<SurveyForm> {
         if(cableListData != null){
           for (var i = 0; i < cableListData.length; i++) {
             cableListData[i].id_survey = int.parse(idSurvey);
+            Cable cable = Cable(id_survey: int.parse(idSurvey), cable_type: cableListData[i].cable_type, cable_length: cableListData[i].cable_length);
+            _apiService.createCable(cable).then((isSuccess){
+              print("sukses insert cable");
+            });
           }
-          _apiService.createCable(cableListData);
-          // print('sukses insert cable');
         }
         deviceListData == null ? print("0 device"):print(deviceListData.length);
         if(deviceListData != null){
           for (var i = 0; i < deviceListData.length; i++) {
             deviceListData[i].id_survey = int.parse(idSurvey);
+            DeviceComp device = DeviceComp(id_survey: int.parse(idSurvey), deviceCompType: deviceListData[i].deviceCompType, vendor: deviceListData[i].vendor, asetNum: deviceListData[i].asetNum, jumlah: deviceListData[i].jumlah);
+            
+            _apiService.createDevice(device).then((onValue){
+              print("sukses insert device");
+            });
           }
-          _apiService.createDevice(deviceListData);
-          // print('sukses insert device');
         }
         // print(idSurvey);
         // print('sukses nambah data');
