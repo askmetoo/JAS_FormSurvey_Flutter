@@ -7,7 +7,6 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      
       borderRadius: BorderRadius.circular(16),
       elevation: 16,
       color: Theme.of(context).accentColor,

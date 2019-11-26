@@ -12,7 +12,6 @@ class ClientSginField extends StatefulWidget {
 }
 
 class _ClientSginFieldState extends State<ClientSginField> {
-  // ByteData _imgClient = new ByteData(0);
   var color = Colors.red;
   var strokeWidth = 5.0;
 
@@ -38,9 +37,6 @@ class _ClientSginFieldState extends State<ClientSginField> {
 
   @override
   Widget build(BuildContext context) {
-    // widget.getSign() == null ?
-    // print("sign Client was NULL"):
-    // print("sign Client : " + widget.getSign());
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -59,8 +55,8 @@ class _ClientSginFieldState extends State<ClientSginField> {
                 color: color,
                 key: _signClient,
                 onSign: () {
-                  final sign = _signClient.currentState;
-                  // debugPrint('${sign.points.length} points in the singnature');
+                  // get sign value
+                  // final sign = _signClient.currentState;
                 },
               ),
               color: Colors.black12,

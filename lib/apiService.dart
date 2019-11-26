@@ -5,16 +5,15 @@ import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/models/deviceComp.dart';
 
 class ApiService {
-  final getURLSurvey = "https://jas.dev.usu.ac.id/api/v1/survey/";
-  final getURLCable = "https://jas.dev.usu.ac.id/api/v1/cable/";
-  final getURLDevice = "https://jas.dev.usu.ac.id/api/v1/device/";
+  final getURLSurvey = "https://jas.dev.usu.ac.id/api/v1/survey";
+  final getURLCable = "https://jas.dev.usu.ac.id/api/v1/cable";
+  final getURLDevice = "https://jas.dev.usu.ac.id/api/v1/device";
   Client client = Client();
 
   Future<List<BeritaAcara>> getSurvey() async {
-    final response = await client.get("$getURLSurvey");
+    final response = await client.get("$getURLSurvey/");
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // print(data);
       return List<BeritaAcara>.from(
           data.map((item) => BeritaAcara.fromJson(item)));
     } else {
@@ -22,18 +21,53 @@ class ApiService {
     }
   }
 
+  Future<List<BeritaAcara>> geSurveybyIdSurvey(idSurvey) async {
+    final response = await client.get("$getURLSurvey/");
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return List<BeritaAcara>.from(
+          data.map((item) => BeritaAcara.fromJson(item)));
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<Cable>> geCablebyIdSurvey(idSurvey) async {
+    final response = await client.get("$getURLCable?id_survey=" + idSurvey.toString());
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if(data['status'] == 200){
+        return List<Cable>.from(data['payload'].map((item) => Cable.fromJson(item)));  
+      }
+      else{
+        return null;
+      }
+      
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<DeviceComp>> geDevicebyIdSurvey(idSurvey) async {
+    final response = await client.get("$getURLDevice?id_survey=" + idSurvey.toString());
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if(data['status']==200){
+        return List<DeviceComp>.from(
+          data['payload'].map((item) => DeviceComp.fromJson(item)));
+      }
+    } else {
+      return null;
+    }
+  }
+
   Future<String> createSurvey(BeritaAcara data) async {
-    // print(data.toJson());
-    // print(getURL);
-    final response = await client.post("$getURLSurvey",
+    final response = await client.post("$getURLSurvey/",
         headers: {"content-type": "application/json"},
         body: json.encode(data.toJson()));
-    // print(response.statusCode);
     if (response.statusCode == 201) {
       var result = json.decode(response.body);
-      // print(response.reasonPhrase);
       var lastId = result['survey_id'];
-      // print(lastId);
       return lastId;
     } else {
       print(response.reasonPhrase);
@@ -42,23 +76,21 @@ class ApiService {
   }
 
   Future<bool> createCable(Cable data) async {
-    final response = await client.post("$getURLCable", headers: {"content-type": "application/json"},body: json.encode(data.toJson()));
-    print(json.encode(data.toJson()));
-    print(response.statusCode);
-    if (response.statusCode ==201) {
+    final response = await client.post("$getURLCable/",
+        headers: {"content-type": "application/json"},
+        body: json.encode(data.toJson()));
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;
     }
-    // print(json.encode(data));
-    
   }
 
   Future<bool> createDevice(DeviceComp data) async {
-    final response = await client.post("$getURLDevice",headers: {"content-type": "application/json"}, body: json.encode(data.toJson()));
-    print(json.encode(data.toJson()));
-    print(response.statusCode);
-    if (response.statusCode ==201) {
+    final response = await client.post("$getURLDevice/",
+        headers: {"content-type": "application/json"},
+        body: json.encode(data.toJson()));
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;

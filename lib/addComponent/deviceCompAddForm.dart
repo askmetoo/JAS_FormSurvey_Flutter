@@ -98,7 +98,7 @@ class _DeviceCompAddFormState extends State<DeviceCompAddForm> {
                   ListTile(
                     title: TextFormField(
                       key: Key("asetNumComp"),
-                      validator: (value) {
+                      validator: (String value) {
                         if (dataDevice.asetNum == null) {
                           return 'Asset Number cannot be empty!';
                         }

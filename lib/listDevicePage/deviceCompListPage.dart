@@ -79,14 +79,14 @@ class _DeviceCompListPageState extends State<DeviceCompListPage> {
                       )),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
-                height: MediaQuery.of(context).size.height * 0.10,
+                height: MediaQuery.of(context).size.height * 0.07,
                 padding: EdgeInsets.only(
                     left: 15.0,
                     right: 15.0,
-                    bottom: MediaQuery.of(context).size.height * 0.01),
+                    bottom: MediaQuery.of(context).size.height * 0.005),
                 child: MaterialButton(
                   key: Key('btnToDeviceForm'),
-                  height: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.of(context).size.height * 0.07,
                   color: Theme.of(context).accentColor,
                   minWidth: double.infinity,
                   child: Text(

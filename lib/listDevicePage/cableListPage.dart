@@ -76,11 +76,11 @@ class _CableListPageState extends State<CableListPage> {
             ),
             //FOR DISPLAY ADD CABLE BUTTON
             Container(
-                height: MediaQuery.of(context).size.height * 0.10,
+                height: MediaQuery.of(context).size.height * 0.07,
                 padding: EdgeInsets.only(
                     left: 15.0,
                     right: 15.0,
-                    bottom: MediaQuery.of(context).size.height * 0.01),
+                    bottom: MediaQuery.of(context).size.height * 0.005),
                 child: MaterialButton(
                   key: Key('btnToCableForm'),
                   height: MediaQuery.of(context).size.height * 0.07,

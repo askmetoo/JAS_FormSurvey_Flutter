@@ -1,19 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
 import 'package:jas_survey/apiService.dart';
-import 'package:jas_survey/drawer.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
 import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
-import 'package:jas_survey/scanForm.dart';
-
 import 'models/cable.dart';
 
 class SurveyForm extends StatefulWidget {
@@ -26,13 +21,17 @@ class SurveyForm extends StatefulWidget {
 class _SurveyFormState extends State<SurveyForm> {
   ApiService _apiService = ApiService();
 
-  // List<BeritaAcara> listSurvey = [];
-
   BeritaAcara surveyData = new BeritaAcara();
+
   DateTime date = DateTime.now();
   final formSurvey = GlobalKey<FormState>();
+  final _surveyState = GlobalKey<ScaffoldState>();
+
+  String _activityTypeValue;
 
   String location;
+  String diagnosis;
+  String solution;
   String signAdmin;
   String adminName;
   String clientName;
@@ -56,65 +55,74 @@ class _SurveyFormState extends State<SurveyForm> {
         });
   }
 
-  // for add survey into list
-  // addSurvey(BeritaAcara newSurvey){
-  //   setState(() {
-  //    listSurvey.add(newSurvey); 
-  //   });
-  //   // debugPrint("jumlah survey: "+listSurvey.length.toString());
-  // }
+  void _failAdd() {
+    _surveyState.currentState.showSnackBar(
+      SnackBar(content: Text('Failed to add survey')),
+    );
+  }
 
-  newSurvey(BeritaAcara newData){
+  // ADD SURVEY TO DATABASE
+  newSurvey(BeritaAcara newData) {
     String locationData = newData.location;
     String clientNameData = newData.clientName;
     String adminNameData = newData.adminName;
     DateTime dateData = newData.date;
     String adminSignData = newData.adminSign;
     String clientSignData = newData.clientSign;
+    String actTypeData = newData.actType;
+    String diagnosisData = newData.diagnosis;
+    String solutionData = newData.solution;
 
     List<DeviceComp> deviceListData = newData.deviceList;
     List<Cable> cableListData = newData.cablesList;
 
-    
-    
-    
-    // for (var i = 0; i < cableListData.length; i++) {
-    //   cableListData[i].id_survey = 2;
-    // }
-    // print(json.encode(cableListData));
+    BeritaAcara survey = BeritaAcara(
+        location: locationData,
+        actType: actTypeData,
+        diagnosis: diagnosisData,
+        solution: solutionData,
+        adminName: adminNameData,
+        clientName: clientNameData,
+        date: dateData,
+        adminSign: adminSignData,
+        clientSign: clientSignData);
 
-    BeritaAcara survey = BeritaAcara(location: locationData, adminName: adminNameData, clientName: clientNameData, date: dateData, adminSign: adminSignData, clientSign: clientSignData);
-    _apiService.createSurvey(survey).then((idSurvey){
-      if(idSurvey != "failed"){
-        cableListData == null ? print("0 cable"):print(cableListData.length);
-        if(cableListData != null){
+    _apiService.createSurvey(survey).then((idSurvey) {
+      if (idSurvey != "failed") {
+        // insert cables
+        if (cableListData != null) {
           for (var i = 0; i < cableListData.length; i++) {
             cableListData[i].id_survey = int.parse(idSurvey);
-            Cable cable = Cable(id_survey: int.parse(idSurvey), cable_type: cableListData[i].cable_type, cable_length: cableListData[i].cable_length);
-            _apiService.createCable(cable).then((isSuccess){
+            Cable cable = Cable(
+                id_survey: int.parse(idSurvey),
+                cable_type: cableListData[i].cable_type,
+                cable_length: cableListData[i].cable_length);
+            _apiService.createCable(cable).then((isSuccess) {
               print("sukses insert cable");
             });
           }
         }
-        deviceListData == null ? print("0 device"):print(deviceListData.length);
-        if(deviceListData != null){
+        // insert devices
+        if (deviceListData != null) {
           for (var i = 0; i < deviceListData.length; i++) {
             deviceListData[i].id_survey = int.parse(idSurvey);
-            DeviceComp device = DeviceComp(id_survey: int.parse(idSurvey), deviceCompType: deviceListData[i].deviceCompType, vendor: deviceListData[i].vendor, asetNum: deviceListData[i].asetNum, jumlah: deviceListData[i].jumlah);
-            
-            _apiService.createDevice(device).then((onValue){
+            DeviceComp device = DeviceComp(
+                id_survey: int.parse(idSurvey),
+                deviceCompType: deviceListData[i].deviceCompType,
+                vendor: deviceListData[i].vendor,
+                asetNum: deviceListData[i].asetNum,
+                jumlah: deviceListData[i].jumlah);
+            _apiService.createDevice(device).then((onValue) {
               print("sukses insert device");
             });
           }
         }
-        // print(idSurvey);
-        // print('sukses nambah data');
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) => HomeJAS()
-        ));
-      }
-      else{
-        print("fail to insert survey");
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeJAS()),
+            ModalRoute.withName(''));
+      } else {
+        _failAdd();
       }
     });
   }
@@ -198,17 +206,12 @@ class _SurveyFormState extends State<SurveyForm> {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint("jumlah survey: "+listSurvey.length.toString());
     setState(() {
       date = date;
       surveyData.date = date;
     });
     return Scaffold(
-      drawer: Drawer(
-        key: Key("drawerBtn"),
-        child: DrawerUI(),
-      ),
-      key: Key('FormKey'),
+      key: _surveyState,
       appBar: AppBar(
         title: Text('Form Berita Acara'),
         elevation: 2.0,
@@ -285,6 +288,52 @@ class _SurveyFormState extends State<SurveyForm> {
                             ),
                           ),
                         ),
+                        ListTile(
+                          leading: IconButton(
+                            icon: Icon(Icons.event_note),
+                            onPressed: () {},
+                          ),
+                          key: Key('actType'),
+                          title: FormField<String>(
+                            validator: (value) {
+                              if (value == null) {
+                                setState(() {
+                                  _activityTypeValue =
+                                      "Please Choose Activity Type!";
+                                });
+                              }
+                            },
+                            builder: (FormFieldState<String> state) {
+                              return DropdownButton<String>(
+                                isExpanded: true,
+                                hint: Text('Activity Type!'),
+                                value: surveyData.actType,
+                                onChanged: (String newvalue) {
+                                  setState(() {
+                                    surveyData.actType = newvalue;
+                                    _activityTypeValue = null;
+                                  });
+                                },
+                                items: <String>[
+                                  'Network / Device Checking',
+                                  'Network / Device Installation',
+                                  'Network / Device De-Installation',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
+                        _activityTypeValue == null
+                            ? SizedBox.shrink()
+                            : Text(
+                                _activityTypeValue ?? "",
+                                style: TextStyle(color: Colors.red),
+                              ),
                         SizedBox(
                           height: 15,
                         )
@@ -319,7 +368,6 @@ class _SurveyFormState extends State<SurveyForm> {
                                   removeDevice: removeDevice,
                                   deviceComps: deviceComps,
                                   setDeviceList: setDeviceList,
-                                  // getDeviceList: getDeviceList,
                                 ),
                                 CableComponent(
                                   addCable: addCable,
@@ -330,6 +378,70 @@ class _SurveyFormState extends State<SurveyForm> {
                                 ),
                               ],
                             )),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 3.0),
+                  ),
+
+                  //DIAGNOSIS AND SOLUTION
+                  Card(
+                    elevation: 2.0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppBar(
+                          leading: Icon(Icons.library_books),
+                          elevation: 0,
+                          title: Text("Problem and Solution"),
+                          backgroundColor: Theme.of(context).accentColor,
+                          centerTitle: false,
+                        ),
+                        ListTile(
+                          leading: IconButton(
+                            icon: Icon(Icons.event_note),
+                            onPressed: () {},
+                          ),
+                          title: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                diagnosis = value;
+                                surveyData.diagnosis = value;
+                              });
+                            },
+                            key: Key('keyDiagnosis'),
+                            decoration: InputDecoration(
+                              labelText: 'Diagnosis',
+                              hintText: 'type diagnosis / problem',
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          leading: IconButton(
+                            icon: Icon(Icons.playlist_add_check),
+                            onPressed: () {},
+                          ),
+                          title: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                solution = value;
+                                surveyData.solution = value;
+                              });
+                            },
+                            key: Key('keySolution'),
+                            decoration: InputDecoration(
+                              labelText: 'Solution',
+                              hintText: 'type the solution',
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
                       ],
                     ),
                   ),
@@ -483,73 +595,6 @@ class _SurveyFormState extends State<SurveyForm> {
                         onPressed: () async {
                           if (formSurvey.currentState.validate()) {
                             newSurvey(surveyData);
-                            // addSurvey(surveyData);
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return CupertinoAlertDialog(
-                            //         content: SingleChildScrollView(
-                            //           child: Column(
-                            //             children: <Widget>[
-                            //               Text("date: ${surveyData.date.day}-${surveyData.date.month}-${surveyData.date.year}"),
-                            //               Text("location: " +
-                            //                   surveyData.location),
-                            //               Text("admin Name: " +
-                            //                   surveyData.adminName),
-                            //               Text("admin Singature: " +
-                            //                   surveyData.adminSign
-                            //                       .substring(0, 10)),
-                            //               Text("client name: " +
-                            //                   surveyData.clientName),
-                            //               Text("client signature: " +
-                            //                   surveyData.clientSign
-                            //                       .substring(0, 10)),
-                            //               surveyData.cablesList == null ?
-                            //               Text("jumlah jenis kabel 0"):
-                            //               Text("jumlah jenis kabel: " +
-                            //                   surveyData.cablesList.length
-                            //                       .toString()),
-                            //               surveyData.deviceList == null?
-                            //               Text("jumlah jenis device 0"):
-                            //               Text("jumlah jenis device: " +
-                            //                   surveyData.deviceList.length
-                            //                       .toString()),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //         actions: <Widget>[
-                            //           MaterialButton(
-                            //             onPressed: () async {
-
-                            //               Navigator.push(
-                            //                   context,
-                            //                   MaterialPageRoute(
-                            //                       builder: (context) =>
-                            //                           HomeJAS()
-                            //                   )
-                            //               );
-                            //               // Navigator.pop(context);
-                            //             },
-                            //             child: Text('Close'),
-                            //           )
-                            //         ],
-                            //       );
-                            //     });
-
-                            // print(
-                            //   surveyData.date.toString()+
-                            //     // "${surveyData.date.day}-${surveyData.date.month}-${surveyData.date.year}" +
-                            //         surveyData.location +
-                            //         surveyData.adminName +
-                            //         surveyData.clientName);
-                            // print(surveyData.adminSign
-                            //         .toString()
-                            //         .substring(0, 10) +
-                            //     surveyData.clientSign.toString());
-                            // surveyData.cablesList == null ?
-                            // print("cable list null"):print("cable list total are : "+surveyData.cablesList.length.toString());
-                            // surveyData.deviceList == null ?
-                            // print("device list null"):print("device list total are : "+surveyData.deviceList.length.toString());
                           }
                         },
                       ))
@@ -561,8 +606,6 @@ class _SurveyFormState extends State<SurveyForm> {
       ),
     );
   }
-
-  //WIDGET ARE HERE
 
   //Calender Dialog
   Future<Null> _selectDate(BuildContext context) async {

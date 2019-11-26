@@ -38,9 +38,6 @@ class _AdminSignFieldState extends State<AdminSignField> {
 
   @override
   Widget build(BuildContext context) {
-    // widget.getSign() == null
-    //     ? print("sign Admin was NULL")
-    //     : print("sign Admin : " + widget.getSign());
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -59,8 +56,8 @@ class _AdminSignFieldState extends State<AdminSignField> {
                 color: color,
                 key: _signAdmin,
                 onSign: () {
-                  final sign = _signAdmin.currentState;
-                  // debugPrint('${sign.points.length} points in the singnature');
+                  // get sign value
+                  // final sign = _signAdmin.currentState;
                 },
               ),
               color: Colors.black12,
@@ -73,7 +70,6 @@ class _AdminSignFieldState extends State<AdminSignField> {
                 : Center(
                     child: LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.20,
-                    // child: Text("tes");
                     child: Image.memory(base64.decode(widget.getSign())),
                   )),
             Row(
@@ -111,6 +107,7 @@ class _AdminSignFieldState extends State<AdminSignField> {
                     Navigator.pop(context);
                   },
                 ),
+                Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.03),)
               ],
             )
           ],

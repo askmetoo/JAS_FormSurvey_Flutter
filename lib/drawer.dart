@@ -21,8 +21,9 @@ class DrawerUI extends StatelessWidget {
               ListTile(
                 key: Key("homeMenu"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeJAS()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeJAS()), ModalRoute.withName(''));
+                  // Navigator.pushAndRemoveUntil(context,
+                  //     MaterialPageRoute(builder: (context) => HomeJAS()), );
                 },
                 title: Row(
                   children: <Widget>[

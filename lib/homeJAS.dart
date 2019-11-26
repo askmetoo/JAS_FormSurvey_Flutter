@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:jas_survey/apiService.dart';
 import 'package:jas_survey/drawer.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
-import 'package:jas_survey/models/cable.dart';
-import 'package:jas_survey/models/deviceComp.dart';
-import 'package:jas_survey/scanForm.dart';
+import 'package:jas_survey/surveyDetail.dart';
 import 'package:jas_survey/surveyForm.dart';
 import 'package:http/http.dart' as http;
+import 'package:jas_survey/emptyState.dart';
 
 class HomeJAS extends StatefulWidget {
   final List<BeritaAcara> surveyList;
@@ -23,76 +19,18 @@ class _HomeJASState extends State<HomeJAS> {
   ApiService apiService;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     apiService = ApiService();
   }
-  // List surveys = List();
 
-  List<BeritaAcara> listSurvey = [
-    // BeritaAcara(
-    //   location: "PSI USU",
-    //   adminName: "rendra",
-    //   clientName: "mahardika",
-    //   date:"07-10-2019",
-    //   adminSign: "adminSign",
-    //   clientSign: "clientSign",
-    //   deviceList: [
-    //     DeviceComp(
-    //       deviceCompType: "Wireless Device",
-    //       vendor: "vendor",
-    //       asetNum: "1001010",
-    //       jumlah: "1"
-    //     )
-    //   ],
-    //   cablesList: [
-    //     Cable(jenisKabel: "FO", panjang: "10")
-    //   ],
-    // ),
-    // BeritaAcara(
-    //   location: "PSI UNIMED",
-    //   adminName: "rendra",
-    //   clientName: "mahardika",
-    //   date:"08-10-2019",
-    //   adminSign: "adminSign",
-    //   clientSign: "clientSign",
-    //   deviceList: [
-    //     DeviceComp(
-    //       deviceCompType: "Wireless Device",
-    //       vendor: "vendor",
-    //       asetNum: "1001010",
-    //       jumlah: "1"
-    //     )
-    //   ],
-    //   cablesList: [
-    //     Cable(jenisKabel: "FO", panjang: "10")
-    //   ],
-    // ),
-    // BeritaAcara(
-    //   location: "FasilkomTI",
-    //   adminName: "rendra",
-    //   clientName: "mahardika",
-    //   date:"010-10-2019",
-    //   adminSign: "adminSign",
-    //   clientSign: "clientSign",
-    //   deviceList: [
-    //     DeviceComp(
-    //       deviceCompType: "Wireless Device",
-    //       vendor: "vendor",
-    //       asetNum: "1001010",
-    //       jumlah: "1"
-    //     )
-    //   ],
-    //   cablesList: [
-    //     Cable(jenisKabel: "FO", panjang: "10")
-    //   ],
-    // )
-  ];
+  detailPage(BeritaAcara data) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SurveyDetail(survey: data)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // ApiService().getSurvey().then((value)=>print(value));
-    // getSurveyData();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         key: Key("fabForm"),
@@ -106,13 +44,9 @@ class _HomeJASState extends State<HomeJAS> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      drawer: Drawer(
-        key: Key("drawerBtn"),
-        child: DrawerUI(),
-      ),
       appBar: AppBar(
         title: Text('JAS Berita Acara'),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -126,52 +60,76 @@ class _HomeJASState extends State<HomeJAS> {
         )),
         child: FutureBuilder(
           future: apiService.getSurvey(),
-          builder: (BuildContext context, AsyncSnapshot<List<BeritaAcara>>snapshot){
+          builder: (BuildContext context,
+              AsyncSnapshot<List<BeritaAcara>> snapshot) {
             if (snapshot.hasError) {
               return Center(
-                child:Text("Something wrong with message: ${snapshot.error.toString()}"),
+                child: EmptyState(
+                  title: "Oops..!!",
+                  message:
+                      "Something wrong with the server.. :( \n ${snapshot.error.toString()}",
+                ),
               );
-            } 
-            else if(snapshot.connectionState == ConnectionState.done){
+            } else if (snapshot.connectionState == ConnectionState.done) {
               List<BeritaAcara> surveys = snapshot.data;
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: ListView.builder(
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, index) {
                     BeritaAcara survey = surveys[index];
-                    
-                  // survey.id_survey is String ? print("yes"):print("no");
                     return Padding(
-                      padding: EdgeInsets.only(top:8.0),
+                      padding: EdgeInsets.only(top: 8.0),
                       child: Card(
                         child: Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                survey.location, 
-                                style: Theme.of(context).textTheme.title,
-                              ),
-                              Text("${survey.date.day}-${survey.date.month}-${survey.date.year}"),
-                              Text(survey.clientName),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  IconButton(icon: Icon(Icons.details), onPressed: () {print(survey.id_survey.toString());},)
+                                  Text(
+                                    survey.location,
+                                    style: Theme.of(context).textTheme.headline,
+                                  ),
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.description,
+                                        size: 35.0,
+                                      ),
+                                      onPressed: () {
+                                        var id = survey.id_survey;
+                                        var oneSurvey = surveys
+                                            .where((survey) =>
+                                                survey.id_survey == id)
+                                            .toList()
+                                            .first;
+                                        detailPage(oneSurvey);
+                                      })
                                 ],
-                              )
+                              ),
+                              Text(
+                                "${survey.date.day}-${survey.date.month}-${survey.date.year}",
+                                style: Theme.of(context).textTheme.subtitle,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10.0),
+                              ),
+                              Text(
+                                survey.clientName,
+                                style: Theme.of(context).textTheme.subtitle,
+                              ),
                             ],
                           ),
                         ),
                       ),
                     );
                   },
-                  itemCount: surveys.length,
+                  itemCount: surveys == null ? 0 : surveys.length,
                 ),
               );
-            } 
-            else {
+            } else {
               return Center(
                 child: CircularProgressIndicator(),
               );

@@ -14,8 +14,6 @@ class CableComponent extends StatefulWidget {
 }
 
 class _CableComponentState extends State<CableComponent> {
-  // List<Cable> cables = [];
-
   @override
   Widget build(BuildContext context) {
     
@@ -45,40 +43,4 @@ class _CableComponentState extends State<CableComponent> {
       enabled: false,
     );
   }
-  // void _removeCableDialog() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return CupertinoAlertDialog(
-  //           content: Text("Cable removed!"),
-  //           actions: <Widget>[
-  //             MaterialButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text('Close'),
-  //             )
-  //           ],
-  //         );
-  //       });
-  // }
-
-  // List<Cable> getCables() {
-  //   return cables;
-  // }
-
-  // addCable(Cable newCable) {
-  //   setState(() {
-  //     cables.add(newCable);
-  //     Navigator.pop(context);
-  //   });
-  // }
-
-  // removeCable(index) {
-  //   // print(index);
-  //   setState(() {
-  //     cables.removeAt(index);
-  //   });
-  //   _removeCableDialog();
-  // }
 }

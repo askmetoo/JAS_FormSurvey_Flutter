@@ -8,7 +8,11 @@ class DeviceComponent extends StatefulWidget {
   final List<DeviceComp> deviceComps;
 
   DeviceComponent(
-      {this.addDevice, this.getDevices, this.removeDevice, this.setDeviceList, this.deviceComps});
+      {this.addDevice,
+      this.getDevices,
+      this.removeDevice,
+      this.setDeviceList,
+      this.deviceComps});
   @override
   _DeviceComponentState createState() => _DeviceComponentState();
 }
