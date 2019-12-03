@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/models/deviceComp.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class BeritaAcara {
   int id_survey;
@@ -12,6 +13,7 @@ class BeritaAcara {
   String solution;
   List<Cable> cablesList;
   List<DeviceComp> deviceList;
+  List<Asset> imageList;
   String adminName;
   String adminSign;
   String clientName;
@@ -26,6 +28,7 @@ class BeritaAcara {
       this.solution,
       this.cablesList,
       this.deviceList,
+      this.imageList,
       this.adminName,
       this.adminSign,
       this.clientName,

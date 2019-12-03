@@ -26,23 +26,28 @@ class _DeviceComponentState extends State<DeviceComponent> {
         'Device & Component',
         style: TextStyle(fontSize: 17.0, color: Colors.black),
       ),
-      trailing: RaisedButton(
-        key: Key("deviceAdd"),
-        elevation: 0,
-        color: Theme.of(context).accentColor,
-        child: Text('Add'),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DeviceCompListPage(
-                        addDevice: widget.addDevice,
-                        setDevice: widget.getDevices,
-                        dataDevice: widget.deviceComps,
-                        removeDevice: widget.removeDevice,
-                        setDeviceList: widget.setDeviceList,
-                      )));
-        },
+      trailing: Column(
+        children: <Widget>[
+          RaisedButton(
+            key: Key("deviceAdd"),
+            elevation: 0,
+            color: Theme.of(context).accentColor,
+            child: Text('Add'),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DeviceCompListPage(
+                            addDevice: widget.addDevice,
+                            setDevice: widget.getDevices,
+                            dataDevice: widget.deviceComps,
+                            removeDevice: widget.removeDevice,
+                            setDeviceList: widget.setDeviceList,
+                          )));
+            },
+          ),
+          widget.deviceComps == null ? Text('0 devices', style: TextStyle(fontSize: 7.0),): Text(widget.deviceComps.length.toString()+" devices", style: TextStyle(fontSize: 7.0),)
+        ],
       ),
       enabled: false,
     );

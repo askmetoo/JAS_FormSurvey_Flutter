@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
+import 'package:jas_survey/addComponent/imageAddComponent.dart';
 import 'package:jas_survey/apiService.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
@@ -9,6 +10,7 @@ import 'package:jas_survey/addComponent/clientSignatureField.dart';
 import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'models/cable.dart';
 
 class SurveyForm extends StatefulWidget {
@@ -178,6 +180,22 @@ class _SurveyFormState extends State<SurveyForm> {
       cables.removeAt(index);
     });
     _removeDialog("Cable removed!");
+  }
+
+  //for get imageList
+  List<Asset> imageList = [];
+  List<Asset> getImageList() {
+    return imageList;
+  }
+
+  setImageList(List<Asset> imageListData) {
+    setState(() {
+      imageList = imageListData;
+      surveyData.imageList = imageList;
+      surveyData.imageList == null
+          ? print("total image = 0")
+          : print(surveyData.imageList.length);
+    });
   }
 
   //for signature
@@ -376,6 +394,7 @@ class _SurveyFormState extends State<SurveyForm> {
                                   cables: cables,
                                   setCableList: setCableList,
                                 ),
+                                SizedBox(height: 15.0,)
                               ],
                             )),
                       ],
@@ -439,6 +458,57 @@ class _SurveyFormState extends State<SurveyForm> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 3.0),
+                  ),
+
+                  // IMAGE PICKER
+                  Card(
+                    elevation: 2.0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppBar(
+                          leading: Icon(Icons.library_books),
+                          elevation: 0,
+                          title: Text("Picture"),
+                          backgroundColor: Theme.of(context).accentColor,
+                          centerTitle: false,
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.add_a_photo),
+                            title: Text(
+                              'Add Image (if any)',
+                              style: TextStyle(
+                                  fontSize: 17.0, color: Colors.black),
+                            ),
+                            trailing: Column(
+                              children: <Widget>[
+                                RaisedButton(
+                                  color: Theme.of(context).accentColor,
+                                  child: Text('Add'),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImageAddComponent(
+                                                  imgList: imageList,
+                                                  setImgList: setImageList,
+                                                  getImgList: getImageList,
+                                                )));
+                                  },
+                                ),
+                                imageList == null ? Text('0 image', style: TextStyle(fontSize: 7.0),): Text(imageList.length.toString()+" images", style: TextStyle(fontSize: 7.0),)
+                              ],
+                            )),
                         SizedBox(
                           height: 15,
                         ),
