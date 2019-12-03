@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:jas_survey/Home.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
 import 'package:jas_survey/addComponent/imageAddComponent.dart';
 import 'package:jas_survey/apiService.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
-import 'package:jas_survey/homeJAS.dart';
+// import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -121,7 +122,7 @@ class _SurveyFormState extends State<SurveyForm> {
         }
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => HomeJAS()),
+            MaterialPageRoute(builder: (context) => Home()),
             ModalRoute.withName(''));
       } else {
         _failAdd();

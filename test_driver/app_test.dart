@@ -22,40 +22,38 @@ void main() {
       print("Check..!!");
     });
 
-    test("check drawer", () async{
-      final SerializableFinder locateDrawer = find.byTooltip("Open navigation menu");
-      await driver.tap(locateDrawer);
-      await driver.tap(find.byValueKey("addFormMenu"));
-      await driver.tap(locateDrawer);
-      await driver.tap(find.byValueKey("homeMenu"));
+    test("check bottom navigation menu", () async{
+      await driver.tap(find.byValueKey('add_survey'));
+      await driver.tap(find.byValueKey("scan_survey"));
+      await driver.tap(find.byValueKey("list_survey"));
       print("Check..!!");
     }); 
 
-    test("fill survey form without device and cable", () async {
-      final SerializableFinder locateDrawer = find.byTooltip("Open navigation menu");
-      await driver.tap(find.byValueKey('fabForm'));
+    test("fill survey form without device and cable and", () async {
+      await driver.tap(find.byValueKey('add_survey'));
       await driver.tap(find.byValueKey('keyLocation'));
       await driver.enterText("Fasilkom-TI");
+      await driver.scrollIntoView(find.byValueKey('keyAdminName'));
       await driver.tap(find.byValueKey("keyAdminName"));
       await driver.enterText("Irshad");
       await driver.waitFor(find.text("Irshad"));
       await driver.tap(find.byValueKey("keyClientName"));
       await driver.enterText("Romi");
       await driver.waitFor(find.text("Romi"));
-      await driver.tap(locateDrawer);
-      await driver.tap(find.byValueKey("homeMenu"));
       print("Check..!!");
     });
 
     test("fill survey form with devices but no cables", ()async{
-      final SerializableFinder locateDrawer = find.byTooltip("Open navigation menu");
-      await driver.tap(find.byValueKey('fabForm'));
+      await driver.tap(find.byValueKey('list_survey'));
+      await driver.tap(find.byValueKey('add_survey'));
       await driver.tap(find.byValueKey('keyDateField'));
       await driver.tap(find.text('20'));
       print('date selected: 20 November 2019');
       await driver.tap(find.text("OK"));
       await driver.tap(find.byValueKey('keyLocation'));
       await driver.enterText("Farmasi");
+      await driver.tap(find.byValueKey('actType'));
+      await driver.tap(find.text('Network / Device Installation'));
       
       await driver.tap(find.byValueKey("deviceAdd"));
 
@@ -103,26 +101,34 @@ void main() {
 
       await driver.tap(find.byValueKey('saveCompBtn'));
 
+      await driver.scrollIntoView(find.byValueKey('keyDiagnosis'));
+
+      await driver.tap(find.byValueKey('keyDiagnosis'));
+      await driver.enterText("Kerusakan beberapa komponen");
+      await driver.tap(find.byValueKey('keySolution'));
+      await driver.enterText("Instalasi beberapa komponen");
+
       await driver.tap(find.byValueKey("keyAdminName"));
       await driver.enterText("Nasrun");
       await driver.waitFor(find.text("Nasrun"));
       await driver.tap(find.byValueKey("keyClientName"));
       await driver.enterText("Anisa");
       await driver.waitFor(find.text("Anisa"));
-      await driver.tap(locateDrawer);
-      await driver.tap(find.byValueKey("homeMenu"));
+      await driver.scrollIntoView(find.byValueKey('submitFormBtn'));
+      await driver.tap(find.byValueKey('submitFormBtn'));
       print('Form Complete, Check..!!');
     });
 
     test("fill survey form with cables but no devices", ()async{
-      final SerializableFinder locateDrawer = find.byTooltip("Open navigation menu");
-      await driver.tap(find.byValueKey('fabForm'));
+      await driver.tap(find.byValueKey('add_survey'));
       await driver.tap(find.byValueKey('keyDateField'));
       await driver.tap(find.text('24'));
       print('date selected: 24 November 2019');
       await driver.tap(find.text("OK"));
       await driver.tap(find.byValueKey('keyLocation'));
       await driver.enterText("Biro Rektor USU");
+      await driver.tap(find.byValueKey('actType'));
+      await driver.tap(find.text('Network / Device Checking'));
 
       await driver.tap(find.byValueKey("cableAdd"));
 
@@ -154,6 +160,13 @@ void main() {
       print('cable 3 added');
 
       await driver.tap(find.byValueKey('saveCableBtn'));
+
+      await driver.scrollIntoView(find.byValueKey('keyDiagnosis'));
+
+      await driver.tap(find.byValueKey('keyDiagnosis'));
+      await driver.enterText("jaringan putus-putus");
+      await driver.tap(find.byValueKey('keySolution'));
+      await driver.enterText("pemeriksaan jaringan dan instalasi kabel");
       
       await driver.tap(find.byValueKey("keyAdminName"));
       await driver.enterText("rendra");
@@ -161,22 +174,15 @@ void main() {
       await driver.tap(find.byValueKey("keyClientName"));
       await driver.enterText("Staff WR 2");
       await driver.waitFor(find.text("Staff WR 2"));
-      await driver.tap(locateDrawer);
-      await driver.tap(find.byValueKey("homeMenu"));
+      await driver.scrollIntoView(find.byValueKey('submitFormBtn'));
+      await driver.tap(find.byValueKey("submitFormBtn"));
       print('Form complete, Check..!!');
     });
 
     test("Test if form not filled, will show error validation", () async{
-        final SerializableFinder locateDrawer = find.byTooltip("Open navigation menu");
-        await driver.tap(find.byValueKey('fabForm'));
+        await driver.tap(find.byValueKey('add_survey'));
 
-        //tes cable form with empty field
-        await driver.tap(find.byValueKey("cableAdd"));
-        await driver.tap(find.byValueKey('btnToCableForm'));
-        await driver.tap(find.byValueKey('addCableSubmitBtn'));
-        print("error validation is showing");
-        await driver.tap(find.byTooltip('Back'));
-        await driver.tap(find.byValueKey('saveCableBtn'));
+        await driver.scrollIntoView(find.byValueKey('deviceAdd'));
         
         //tes device form with empty field
         await driver.tap(find.byValueKey('deviceAdd'));
@@ -186,11 +192,17 @@ void main() {
         await driver.tap(find.byTooltip('Back'));
         await driver.tap(find.byValueKey('saveCompBtn'));
 
+        //tes cable form with empty field
+        await driver.tap(find.byValueKey("cableAdd"));
+        await driver.tap(find.byValueKey('btnToCableForm'));
+        await driver.tap(find.byValueKey('addCableSubmitBtn'));
+        print("error validation is showing");
+        await driver.tap(find.byTooltip('Back'));
+        await driver.tap(find.byValueKey('saveCableBtn'));
+
         await driver.scrollIntoView(find.byValueKey('submitFormBtn'));
         await driver.tap(find.byValueKey('submitFormBtn'));
         print('validation warning was appeared');
-        await driver.tap(locateDrawer);
-        await driver.tap(find.byValueKey("homeMenu"));
         print("Check..!!");
     });
   });

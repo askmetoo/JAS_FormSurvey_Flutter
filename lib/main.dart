@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
         accentColor: Color(0xFF1DCC8C),
         platform: TargetPlatform.iOS
       ),
-      home: ImagePicker(),
-      // home: Home(),
+      // home: ImagePicker(),
+      home: Home(),
       // home: HomeJAS(),
       // home: SurveyForm(),
     );

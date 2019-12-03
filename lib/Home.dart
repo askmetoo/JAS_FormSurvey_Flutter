@@ -32,11 +32,21 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.list,
+                key: Key('list_survey'),
               ),
               title: Text("")),
-          BottomNavigationBarItem(icon: Icon(Icons.note_add), title: Text("")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.camera_enhance), title: Text("")),
+              icon: Icon(
+                Icons.note_add,
+                key: Key('add_survey'),
+              ),
+              title: Text("")),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.camera_enhance,
+                key: Key('scan_survey'),
+              ),
+              title: Text("")),
         ],
       ),
     );
