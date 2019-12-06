@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jas_survey/apiService.dart';
 import 'package:jas_survey/drawer.dart';
 import 'package:jas_survey/emptyState.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/cable.dart';
 import 'package:jas_survey/models/deviceComp.dart';
+import 'package:jas_survey/models/imageSurvey.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class SurveyDetail extends StatefulWidget {
   BeritaAcara survey;
@@ -278,6 +281,73 @@ class _SurveyDetailState extends State<SurveyDetail> {
               Padding(
                 padding: EdgeInsets.all(3.0),
               ),
+
+              Card(
+                  elevation: 2.0,
+                  child:
+                      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                    AppBar(
+                      leading: Icon(Icons.library_books),
+                      elevation: 0,
+                      title: Text("Images"),
+                      backgroundColor: Theme.of(context).accentColor,
+                      centerTitle: false,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(3.0),
+                      child: FutureBuilder(
+                        future: apiService.getImage(widget.survey.id_survey),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<ImageSurvey>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            List<ImageSurvey> imageSurveys = snapshot.data;
+                            // print(imageSurveys);
+                            if (imageSurveys != null) {
+                              return Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.3,
+                                  child: ListView.builder(
+                                  itemCount: imageSurveys.length,
+                                  itemBuilder: (context, index){
+                                    ImageSurvey imageSurveyItem = imageSurveys[index];
+                                    return Column(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.all(3.0),
+                                          child: Image.memory(base64.decode(imageSurveyItem.image_string), ),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                ),
+                                )
+                              );
+                            } else {
+                              return Container(
+                                child: Text(
+                                  "No Image Attached",
+                                  style: Theme.of(context).textTheme.title,
+                                ),
+                              );
+                            }
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    )
+                  ])),
+              Padding(
+                padding: EdgeInsets.all(3.0),
+              ),
+              //Display Signature
               Card(
                 elevation: 2.0,
                 child: Column(
@@ -340,7 +410,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                   ],
                 ),
               ),
-              // signature
             ],
           ),
         ));

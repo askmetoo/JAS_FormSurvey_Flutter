@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jas_survey/emptyState.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -16,6 +19,9 @@ class _ImageAddComponentState extends State<ImageAddComponent> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      widget.imgList = widget.getImgList();
+    });
   }
 
   Widget buildGridView() {
@@ -23,6 +29,7 @@ class _ImageAddComponentState extends State<ImageAddComponent> {
       padding: EdgeInsets.all(3.0),
       crossAxisCount: 3,
       children: List.generate(widget.imgList.length, (index) {
+        // print(widget.imgList[index]);
         Asset asset = widget.imgList[index];
         return Padding(
           padding: EdgeInsets.all(3.0),
@@ -46,13 +53,14 @@ class _ImageAddComponentState extends State<ImageAddComponent> {
     try {
       resultList = await MultiImagePicker.pickImages(
         enableCamera: true,
-        maxImages: 300,
+        maxImages: 10,
       );
     } on NoImagesSelectedException catch (e) {
       print(e);
-      setState(() {
-        widget.imgList = widget.getImgList();
-      });
+      Navigator.pop(context);
+      // setState(() {
+      //   widget.imgList = widget.getImgList();
+      // });
     } on Exception catch (e) {
       print(e);
     }
@@ -66,6 +74,7 @@ class _ImageAddComponentState extends State<ImageAddComponent> {
       // imageList = resultList;
       widget.imgList = resultList;
     });
+
   }
 
   @override
@@ -99,7 +108,7 @@ class _ImageAddComponentState extends State<ImageAddComponent> {
             children: <Widget>[
               Container(
                 height: MediaQuery.of(context).size.height * 0.76,
-                child: widget.imgList == null
+                child: widget.imgList == null || widget.imgList.length == 0
                     ? Center(
                         child: EmptyState(
                           title: "Oops..!!",

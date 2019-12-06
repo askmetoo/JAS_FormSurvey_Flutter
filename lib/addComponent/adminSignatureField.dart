@@ -86,7 +86,6 @@ class _AdminSignFieldState extends State<AdminSignField> {
                           await image.toByteData(format: ImageByteFormat.png);
                       final encoded = base64.encode(data.buffer.asUint8List());
                       await widget.setSign(encoded);
-                      debugPrint("Admin Signature Retrieved!");
                       Navigator.pop(context);
                     } else {
                       _alertSign("Admin Signature Cannot be Empty!");
@@ -103,7 +102,6 @@ class _AdminSignFieldState extends State<AdminSignField> {
                     final sign = _signAdmin.currentState;
                     sign.clear();
                     await widget.setSign(null);
-                    debugPrint("Admin Signature Removed!");
                     Navigator.pop(context);
                   },
                 ),

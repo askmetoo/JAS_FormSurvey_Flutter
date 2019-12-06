@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:jas_survey/Home.dart';
 import 'package:jas_survey/addComponent/adminSignatureField.dart';
 import 'package:jas_survey/addComponent/imageAddComponent.dart';
@@ -11,6 +15,7 @@ import 'package:jas_survey/addComponent/clientSignatureField.dart';
 // import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
+import 'package:jas_survey/models/imageSurvey.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'models/cable.dart';
 
@@ -90,7 +95,7 @@ class _SurveyFormState extends State<SurveyForm> {
         adminSign: adminSignData,
         clientSign: clientSignData);
 
-    _apiService.createSurvey(survey).then((idSurvey) {
+    _apiService.createSurvey(survey).then((idSurvey) async {
       if (idSurvey != "failed") {
         // insert cables
         if (cableListData != null) {
@@ -120,6 +125,22 @@ class _SurveyFormState extends State<SurveyForm> {
             });
           }
         }
+
+        //insert image
+        if (imageList != null) {
+          for (var i = 0; i < imageList.length; i++) {
+            ByteData a = await imageList[i].getByteData(quality: 60);
+            String b = base64.encode(a.buffer.asUint8List());
+            // print(b);
+            ImageSurvey imageSurveyData = ImageSurvey(
+              id_survey: int.parse(idSurvey),
+              image_string: b); 
+            _apiService.createImage(imageSurveyData).then((onValue){
+              print("sukses insert image, $onValue");
+            });
+          }  
+        }
+
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Home()),
@@ -189,7 +210,7 @@ class _SurveyFormState extends State<SurveyForm> {
     return imageList;
   }
 
-  setImageList(List<Asset> imageListData) {
+  setImageList(List<Asset> imageListData) async{
     setState(() {
       imageList = imageListData;
       surveyData.imageList = imageList;
