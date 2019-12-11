@@ -64,7 +64,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                         child: Column(
                           children: <Widget>[
                             ListTile(
-                              leading: Text("Location"),
+                              leading: Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text("Location"),
+                              ),
                               title: Text(
                                 widget.survey.location,
                                 style: Theme.of(context).textTheme.subhead,
@@ -72,7 +75,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                               enabled: false,
                             ),
                             ListTile(
-                              leading: Text("Date"),
+                              leading: Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text("Date"),
+                              ),
                               title: Text(
                                 "   ${widget.survey.date.day}-${widget.survey.date.month}-${widget.survey.date.year}",
                                 style: Theme.of(context).textTheme.subhead,
@@ -80,7 +86,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                               enabled: false,
                             ),
                             ListTile(
-                              leading: Text("Activity"),
+                              leading: Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text("Activity"),
+                              ),
                               title: widget.survey.actType != null
                                   ? Text(
                                       "  " + widget.survey.actType,
@@ -95,7 +104,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                               enabled: false,
                             ),
                             ListTile(
-                              leading: Text("Problem"),
+                              leading: Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text("Problem"),
+                              ),
                               title: widget.survey.diagnosis != null
                                   ? Text(
                                       widget.survey.diagnosis,
@@ -110,10 +122,13 @@ class _SurveyDetailState extends State<SurveyDetail> {
                               enabled: false,
                             ),
                             ListTile(
-                              leading: Text("Solution"),
+                              leading: Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text("Solution"),
+                              ),
                               title: widget.survey.solution != null
                                   ? Text(
-                                      widget.survey.diagnosis,
+                                      widget.survey.solution,
                                       style:
                                           Theme.of(context).textTheme.subhead,
                                     )
@@ -170,7 +185,8 @@ class _SurveyDetailState extends State<SurveyDetail> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.30,
+                                              0.10 *
+                                              cables.length,
                                           child: ListView.builder(
                                             shrinkWrap: true,
                                             itemCount: cables == null
@@ -210,7 +226,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                           ],
                         )),
                     Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(10.0),
                         child: Column(
                           children: <Widget>[
                             Text("Devices / Components",
@@ -233,7 +249,8 @@ class _SurveyDetailState extends State<SurveyDetail> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.30,
+                                              0.10 *
+                                              devices.length,
                                           child: ListView.builder(
                                             shrinkWrap: true,
                                             itemCount: devices == null
@@ -282,6 +299,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 padding: EdgeInsets.all(3.0),
               ),
 
+              //Show Image Doc
               Card(
                   elevation: 2.0,
                   child:
@@ -302,30 +320,36 @@ class _SurveyDetailState extends State<SurveyDetail> {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
                             List<ImageSurvey> imageSurveys = snapshot.data;
-                            // print(imageSurveys);
+
                             if (imageSurveys != null) {
                               return Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.3,
-                                  child: ListView.builder(
-                                  itemCount: imageSurveys.length,
-                                  itemBuilder: (context, index){
-                                    ImageSurvey imageSurveyItem = imageSurveys[index];
-                                    return Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.all(3.0),
-                                          child: Image.memory(base64.decode(imageSurveyItem.image_string), ),
-                                        )
-                                      ],
-                                    );
-                                  },
-                                ),
-                                )
-                              );
+                                  padding: EdgeInsets.all(10.0),
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.6 *
+                                        imageSurveys.length,
+                                    child: ListView.builder(
+                                      itemCount: imageSurveys.length,
+                                      itemBuilder: (context, index) {
+                                        ImageSurvey imageSurveyItem =
+                                            imageSurveys[index];
+                                        return Column(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.all(3.0),
+                                              child: Image.memory(
+                                                base64.decode(imageSurveyItem
+                                                    .image_string),
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ));
                             } else {
                               return Container(
+                                padding: EdgeInsets.only(top: 15.0),
                                 child: Text(
                                   "No Image Attached",
                                   style: Theme.of(context).textTheme.title,

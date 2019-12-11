@@ -69,7 +69,7 @@ class ApiService {
     final response = await client.get("$getURLImage?id_survey="+idSurvey.toString());
     if(response.statusCode == 200){
       final data = json.decode(response.body);
-      print(data);
+      // print(data);
       if(data['status']==200){
         return List<ImageSurvey>.from(data['payload'].map((item)=> ImageSurvey.fromJson(item)));
       }
@@ -88,7 +88,7 @@ class ApiService {
       var lastId = result['survey_id'];
       return lastId;
     } else {
-      print(response.reasonPhrase);
+      // print(response.reasonPhrase);
       return "failed";
     }
   }

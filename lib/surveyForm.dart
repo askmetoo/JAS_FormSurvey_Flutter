@@ -225,7 +225,7 @@ class _SurveyFormState extends State<SurveyForm> {
     setState(() {
       signAdmin = sign;
       surveyData.adminSign = sign.toString();
-      print(surveyData.adminSign.length);
+      // print(surveyData.adminSign.length);
     });
   }
 
