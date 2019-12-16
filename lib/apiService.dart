@@ -64,17 +64,16 @@ class ApiService {
     }
   }
 
-  Future<List<ImageSurvey>> getImage(idSurvey) async{
-    // print("$getURLImage?id_survey"+idSurvey.toString());
-    final response = await client.get("$getURLImage?id_survey="+idSurvey.toString());
-    if(response.statusCode == 200){
+  Future<List<ImageSurvey>> getImage(idSurvey) async {
+    final response =
+        await client.get("$getURLImage?id_survey=" + idSurvey.toString());
+    if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // print(data);
-      if(data['status']==200){
-        return List<ImageSurvey>.from(data['payload'].map((item)=> ImageSurvey.fromJson(item)));
+      if (data['status'] == 200) {
+        return List<ImageSurvey>.from(
+            data['payload'].map((item) => ImageSurvey.fromJson(item)));
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
@@ -88,7 +87,6 @@ class ApiService {
       var lastId = result['survey_id'];
       return lastId;
     } else {
-      // print(response.reasonPhrase);
       return "failed";
     }
   }
@@ -116,14 +114,12 @@ class ApiService {
   }
 
   Future<bool> createImage(ImageSurvey data) async {
-    // print(json.encode(data.toJson()));
     final response = await client.post("$getURLImage/",
         headers: {"content-type": "application/json"},
         body: json.encode(data.toJson()));
-    if(response.statusCode ==201){
+    if (response.statusCode == 201) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }

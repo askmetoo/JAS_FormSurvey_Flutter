@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jas_survey/apiService.dart';
-import 'package:jas_survey/drawer.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/surveyDetail.dart';
 import 'package:jas_survey/surveyForm.dart';
-import 'package:http/http.dart' as http;
 import 'package:jas_survey/emptyState.dart';
 
 class HomeJAS extends StatefulWidget {

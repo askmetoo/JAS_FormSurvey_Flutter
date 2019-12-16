@@ -12,7 +12,6 @@ import 'package:jas_survey/apiService.dart';
 import 'package:jas_survey/formComponent/cableComponent.dart';
 import 'package:jas_survey/formComponent/deviceComponent.dart';
 import 'package:jas_survey/addComponent/clientSignatureField.dart';
-// import 'package:jas_survey/homeJAS.dart';
 import 'package:jas_survey/models/beritaAcara.dart';
 import 'package:jas_survey/models/deviceComp.dart';
 import 'package:jas_survey/models/imageSurvey.dart';
@@ -105,9 +104,7 @@ class _SurveyFormState extends State<SurveyForm> {
                 id_survey: int.parse(idSurvey),
                 cable_type: cableListData[i].cable_type,
                 cable_length: cableListData[i].cable_length);
-            _apiService.createCable(cable).then((isSuccess) {
-              print("sukses insert cable");
-            });
+            _apiService.createCable(cable).then((isSuccess) {});
           }
         }
         // insert devices
@@ -120,9 +117,7 @@ class _SurveyFormState extends State<SurveyForm> {
                 vendor: deviceListData[i].vendor,
                 asetNum: deviceListData[i].asetNum,
                 jumlah: deviceListData[i].jumlah);
-            _apiService.createDevice(device).then((onValue) {
-              print("sukses insert device");
-            });
+            _apiService.createDevice(device).then((onValue) {});
           }
         }
 
@@ -131,14 +126,10 @@ class _SurveyFormState extends State<SurveyForm> {
           for (var i = 0; i < imageList.length; i++) {
             ByteData a = await imageList[i].getByteData(quality: 60);
             String b = base64.encode(a.buffer.asUint8List());
-            // print(b);
-            ImageSurvey imageSurveyData = ImageSurvey(
-              id_survey: int.parse(idSurvey),
-              image_string: b); 
-            _apiService.createImage(imageSurveyData).then((onValue){
-              print("sukses insert image, $onValue");
-            });
-          }  
+            ImageSurvey imageSurveyData =
+                ImageSurvey(id_survey: int.parse(idSurvey), image_string: b);
+            _apiService.createImage(imageSurveyData).then((onValue) {});
+          }
         }
 
         Navigator.pushAndRemoveUntil(
@@ -171,7 +162,6 @@ class _SurveyFormState extends State<SurveyForm> {
   }
 
   removeDevice(index) {
-    // print(index);
     setState(() {
       deviceComps.removeAt(index);
     });
@@ -210,13 +200,10 @@ class _SurveyFormState extends State<SurveyForm> {
     return imageList;
   }
 
-  setImageList(List<Asset> imageListData) async{
+  setImageList(List<Asset> imageListData) async {
     setState(() {
       imageList = imageListData;
       surveyData.imageList = imageList;
-      surveyData.imageList == null
-          ? print("total image = 0")
-          : print(surveyData.imageList.length);
     });
   }
 
@@ -225,7 +212,6 @@ class _SurveyFormState extends State<SurveyForm> {
     setState(() {
       signAdmin = sign;
       surveyData.adminSign = sign.toString();
-      // print(surveyData.adminSign.length);
     });
   }
 
@@ -416,7 +402,9 @@ class _SurveyFormState extends State<SurveyForm> {
                                   cables: cables,
                                   setCableList: setCableList,
                                 ),
-                                SizedBox(height: 15.0,)
+                                SizedBox(
+                                  height: 15.0,
+                                )
                               ],
                             )),
                       ],
@@ -528,7 +516,15 @@ class _SurveyFormState extends State<SurveyForm> {
                                                 )));
                                   },
                                 ),
-                                imageList == null ? Text('0 image', style: TextStyle(fontSize: 7.0),): Text(imageList.length.toString()+" images", style: TextStyle(fontSize: 7.0),)
+                                imageList == null
+                                    ? Text(
+                                        '0 image',
+                                        style: TextStyle(fontSize: 7.0),
+                                      )
+                                    : Text(
+                                        imageList.length.toString() + " images",
+                                        style: TextStyle(fontSize: 7.0),
+                                      )
                               ],
                             )),
                         SizedBox(
