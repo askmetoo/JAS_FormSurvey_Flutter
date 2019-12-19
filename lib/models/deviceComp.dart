@@ -1,14 +1,14 @@
 class DeviceComp {
-  int id_device;
-  int id_survey;
+  int idDevice;
+  int idSurvey;
   String deviceCompType = "";
   String vendor = "";
   String asetNum = "";
   int jumlah;
 
   DeviceComp(
-      {this.id_device,
-      this.id_survey,
+      {this.idDevice,
+      this.idSurvey,
       this.deviceCompType,
       this.vendor,
       this.asetNum,
@@ -16,8 +16,8 @@ class DeviceComp {
 
   factory DeviceComp.fromJson(Map<String, dynamic> json) {
     return DeviceComp(
-      id_device: int.parse(json['id_device']),
-      id_survey: int.parse(json['id_survey']),
+      idDevice: int.parse(json['id_device']),
+      idSurvey: int.parse(json['id_survey']),
       deviceCompType: json['device_type'],
       vendor: json['device_vendor'],
       asetNum: json['device_assetNumber'],
@@ -28,7 +28,7 @@ class DeviceComp {
   Map<String, dynamic> toJson() {
     return {
       "id_device": "",
-      "id_survey": id_survey,
+      "id_survey": idSurvey,
       "device_type": deviceCompType,
       "device_vendor": vendor,
       "device_assetNumber": asetNum,

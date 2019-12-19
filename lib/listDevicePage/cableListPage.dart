@@ -59,12 +59,12 @@ class _CableListPageState extends State<CableListPage> {
                           itemBuilder: (BuildContext context, int index) =>
                               ListTile(
                                 leading: Text(
-                                  widget.dataCable[index].cable_type,
+                                  widget.dataCable[index].cableType,
                                 ),
                                 title: Text("Kabel " +
-                                    widget.dataCable[index].cable_type),
+                                    widget.dataCable[index].cableType),
                                 subtitle: Text(
-                                    widget.dataCable[index].cable_length.toString() + " meter"),
+                                    widget.dataCable[index].cableLength.toString() + " meter"),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {

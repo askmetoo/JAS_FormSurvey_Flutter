@@ -5,7 +5,7 @@ import 'package:jas_survey/models/deviceComp.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class BeritaAcara {
-  int id_survey;
+  int idSurvey;
   DateTime date;
   String location;
   String actType;
@@ -20,7 +20,7 @@ class BeritaAcara {
   String clientSign;
 
   BeritaAcara(
-      {this.id_survey,
+      {this.idSurvey,
       this.date,
       this.location,
       this.actType,
@@ -36,7 +36,7 @@ class BeritaAcara {
 
   factory BeritaAcara.fromJson(Map<String, dynamic> json) {
     return BeritaAcara(
-      id_survey: int.parse(json['id_survey']),
+      idSurvey: int.parse(json['id_survey']),
       date: DateTime.parse(json["date"]),
       location: json['location'],
       actType: json['act_type'],

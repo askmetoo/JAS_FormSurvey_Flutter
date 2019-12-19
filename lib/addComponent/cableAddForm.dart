@@ -36,7 +36,7 @@ class _CableAddFormState extends State<CableAddForm> {
                     key: Key('cableType'),
                     title: FormField<String>(
                       validator: (value){
-                        if(dataCable.cable_type == null){
+                        if(dataCable.cableType == null){
                           setState(() {
                            _cableTypeValue = "Please Choose Cable Type!";
                           });
@@ -46,10 +46,10 @@ class _CableAddFormState extends State<CableAddForm> {
                         return DropdownButton<String>(
                           isExpanded: true,
                           hint: Text('Choose Cable Type!'),
-                          value: dataCable.cable_type,
+                          value: dataCable.cableType,
                           onChanged: (String newvalue) {
                             setState(() {
-                              dataCable.cable_type = newvalue;
+                              dataCable.cableType = newvalue;
                               _cableTypeValue = null;
                             });
                           },
@@ -83,12 +83,12 @@ class _CableAddFormState extends State<CableAddForm> {
                           isDense: true,
                         ),
                         validator: (value) {
-                          if (dataCable.cable_length == null) {
+                          if (dataCable.cableLength == null) {
                             return 'Cable length cannot be empty!';
                           }
                         },
                         onChanged: (String val) {
-                          setState(() => dataCable.cable_length = int.parse(val));
+                          setState(() => dataCable.cableLength = int.parse(val));
                         }),
                   ),
                   Padding(

@@ -99,20 +99,20 @@ class _SurveyFormState extends State<SurveyForm> {
         // insert cables
         if (cableListData != null) {
           for (var i = 0; i < cableListData.length; i++) {
-            cableListData[i].id_survey = int.parse(idSurvey);
+            cableListData[i].idSurvey = int.parse(idSurvey);
             Cable cable = Cable(
-                id_survey: int.parse(idSurvey),
-                cable_type: cableListData[i].cable_type,
-                cable_length: cableListData[i].cable_length);
+                idSurvey: int.parse(idSurvey),
+                cableType: cableListData[i].cableType,
+                cableLength: cableListData[i].cableLength);
             _apiService.createCable(cable).then((isSuccess) {});
           }
         }
         // insert devices
         if (deviceListData != null) {
           for (var i = 0; i < deviceListData.length; i++) {
-            deviceListData[i].id_survey = int.parse(idSurvey);
+            deviceListData[i].idSurvey = int.parse(idSurvey);
             DeviceComp device = DeviceComp(
-                id_survey: int.parse(idSurvey),
+                idSurvey: int.parse(idSurvey),
                 deviceCompType: deviceListData[i].deviceCompType,
                 vendor: deviceListData[i].vendor,
                 asetNum: deviceListData[i].asetNum,
@@ -127,7 +127,7 @@ class _SurveyFormState extends State<SurveyForm> {
             ByteData a = await imageList[i].getByteData(quality: 60);
             String b = base64.encode(a.buffer.asUint8List());
             ImageSurvey imageSurveyData =
-                ImageSurvey(id_survey: int.parse(idSurvey), image_string: b);
+                ImageSurvey(idSurvey: int.parse(idSurvey), imageString: b);
             _apiService.createImage(imageSurveyData).then((onValue) {});
           }
         }

@@ -1,28 +1,28 @@
 import 'dart:convert';
 
 class Cable {
-  int id_cable;
-  int id_survey;
-  int cable_length;
-  String cable_type = "";
+  int idCable;
+  int idSurvey;
+  int cableLength;
+  String cableType = "";
 
-  Cable({this.id_cable, this.id_survey, this.cable_length, this.cable_type});
+  Cable({this.idCable, this.idSurvey, this.cableLength, this.cableType});
 
   factory Cable.fromJson(Map<String, dynamic> json) {
     return Cable(
-      id_cable: int.parse(json['id_cable']),
-      id_survey: int.parse(json['id_survey']),
-      cable_type: json['cable_type'],
-      cable_length: int.parse(json['cable_length']),
+      idCable: int.parse(json['id_cable']),
+      idSurvey: int.parse(json['id_survey']),
+      cableType: json['cable_type'],
+      cableLength: int.parse(json['cable_length']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "id_cable": "",
-      "id_survey": id_survey,
-      "cable_type": cable_type,
-      "cable_length": cable_length
+      "id_survey": idSurvey,
+      "cable_type": cableType,
+      "cable_length": cableLength
     };
   }
 

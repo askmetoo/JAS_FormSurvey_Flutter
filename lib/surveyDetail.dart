@@ -168,7 +168,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                             ),
                             FutureBuilder(
                               future: apiService
-                                  .geCablebyIdSurvey(widget.survey.id_survey),
+                                  .geCablebyIdSurvey(widget.survey.idSurvey),
                               builder: (BuildContext context,
                                   AsyncSnapshot<List<Cable>> snapshot) {
                                 if (snapshot.connectionState ==
@@ -193,10 +193,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                                               return ListTile(
                                                 leading: Text(
                                                     (index + 1).toString()),
-                                                title: Text(cable.cable_type +
+                                                title: Text(cable.cableType +
                                                     " Cable"),
                                                 subtitle: Text("Length: " +
-                                                    cable.cable_length
+                                                    cable.cableLength
                                                         .toString() +
                                                     " M"),
                                               );
@@ -232,7 +232,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                             ),
                             FutureBuilder(
                               future: apiService
-                                  .geDevicebyIdSurvey(widget.survey.id_survey),
+                                  .geDevicebyIdSurvey(widget.survey.idSurvey),
                               builder: (BuildContext context,
                                   AsyncSnapshot<List<DeviceComp>> snapshot) {
                                 if (snapshot.connectionState ==
@@ -310,7 +310,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     Padding(
                       padding: EdgeInsets.all(3.0),
                       child: FutureBuilder(
-                        future: apiService.getImage(widget.survey.id_survey),
+                        future: apiService.getImage(widget.survey.idSurvey),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<ImageSurvey>> snapshot) {
                           if (snapshot.connectionState ==
@@ -322,7 +322,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                                   padding: EdgeInsets.all(10.0),
                                   child: SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.6 *
+                                        0.35 *
                                         imageSurveys.length,
                                     child: ListView.builder(
                                       itemCount: imageSurveys.length,
@@ -335,7 +335,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                                               padding: EdgeInsets.all(3.0),
                                               child: Image.memory(
                                                 base64.decode(imageSurveyItem
-                                                    .image_string),
+                                                    .imageString),
                                               ),
                                             )
                                           ],

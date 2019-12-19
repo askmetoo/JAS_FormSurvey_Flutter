@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:jas_survey/Home.dart';
 
 void main() async {
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 

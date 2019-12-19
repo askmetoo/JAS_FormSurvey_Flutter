@@ -97,10 +97,10 @@ class _HomeJASState extends State<HomeJAS> {
                                         size: 35.0,
                                       ),
                                       onPressed: () {
-                                        var id = survey.id_survey;
+                                        var id = survey.idSurvey;
                                         var oneSurvey = surveys
                                             .where((survey) =>
-                                                survey.id_survey == id)
+                                                survey.idSurvey == id)
                                             .toList()
                                             .first;
                                         detailPage(oneSurvey);
